@@ -30,6 +30,7 @@ const About = () => {
         title="About Taxly Academy"
         subtitle="We are building Africa’s largest talent pool of virtual professionals. Join us."
         ctaText="" // No button will render
+        
       />
 
       <section className="about-section py-5">
@@ -55,6 +56,7 @@ const About = () => {
                 src="/images/ourmission.png"
                 alt="About Taxly Academy"
                 className="img-fluid"
+                loading="lazy"
               />
             </div>
           </div>

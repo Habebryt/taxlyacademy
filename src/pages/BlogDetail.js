@@ -40,6 +40,7 @@ const BlogDetail = () => {
             src={post.image}
             alt={post.title}
             className="img-fluid mb-4 rounded"
+            loading="lazy"
           />
           <p>{post.content}</p>
         </div>

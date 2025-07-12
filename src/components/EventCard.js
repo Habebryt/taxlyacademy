@@ -6,7 +6,7 @@ const EventCard = ({ event }) => {
   return (
     <div className="col-md-6 mb-4" data-aos="fade-up">
       <div className="card h-100 shadow-sm">
-        <img src={event.image} alt={event.title} className="card-img-top" />
+        <img src={event.image} alt={event.title} className="card-img-top" loading="lazy"/>
         <div className="card-body">
           <h5 className="card-title">{event.title}</h5>
           <p className="card-text text-muted"><strong>{event.date}</strong> • {event.location}</p>

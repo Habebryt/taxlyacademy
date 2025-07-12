@@ -13,6 +13,7 @@ const Hero = ({
     <section
       className="hero-banner d-flex align-items-center justify-content-center text-white"
       style={{ backgroundImage: `url(${backgroundImage})` }}
+      loading="lazy"
       id="hero"
     >
       <div className="overlay"></div>

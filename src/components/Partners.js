@@ -31,12 +31,12 @@ const Partners = () => {
             {/* We render the list of logos twice for a seamless loop */}
             {partners.map((logo, idx) => (
               <div key={`logo-a-${idx}`} className="partner-logo">
-                <img src={logo} alt={`Partner ${idx + 1}`} />
+                <img src={logo} alt={`Partner ${idx + 1}`} loading="lazy"/>
               </div>
             ))}
             {partners.map((logo, idx) => (
               <div key={`logo-b-${idx}`} className="partner-logo">
-                <img src={logo} alt={`Partner ${idx + 1}`} />
+                <img src={logo} alt={`Partner ${idx + 1}`} loading="lazy"/>
               </div>
             ))}
           </div>

@@ -37,7 +37,7 @@ const EventDetail = () => {
       <div className="container">
         <div className="row align-items-center mb-4">
           <div className="col-md-6" data-aos="fade-right">
-            <img src={event.image} alt={event.title} className="img-fluid rounded shadow" />
+            <img src={event.image} alt={event.title} className="img-fluid rounded shadow" loading="lazy"/>
           </div>
           <div className="col-md-6" data-aos="fade-left">
             <h2>{event.title}</h2>

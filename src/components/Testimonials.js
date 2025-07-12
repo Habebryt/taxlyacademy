@@ -35,7 +35,7 @@ const Testimonials = () => {
           {testimonials.map((t, index) => (
             <div className="col-md-4 mb-4" key={index} data-aos="fade-up" data-aos-delay={index * 100}>
               <div className="testimonial-card p-4 shadow-sm h-100 text-center">
-                <img src={t.image} alt={t.name} className="testimonial-img mb-3 rounded-circle" />
+                <img src={t.image} alt={t.name} className="testimonial-img mb-3 rounded-circle" loading="lazy"/>
                 <h5 className="testimonial-name">{t.name}</h5>
                 <p className="testimonial-role text-muted">{t.role}</p>
                 <p className="testimonial-text">“{t.feedback}”</p>

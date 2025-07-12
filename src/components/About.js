@@ -16,7 +16,7 @@ const About = () => {
         <div className="row align-items-center">
           <div className="col-md-6" data-aos="fade-right">
             
-            <img src={heroImage} alt="Hero" className="img-fluid hero-image rounded shadow" />
+            <img src={heroImage} alt="Hero" className="img-fluid hero-image rounded shadow" loading="lazy" />
           </div>
           <div className="col-md-6" data-aos="fade-left">
             <h3>Our Mission</h3>
