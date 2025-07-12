@@ -1,0 +1,26 @@
+/* styles/EventCard.css */
+.card-img-top {
+  height: 250px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.95rem;
+}
+
+.btn-outline-primary {
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: white;
+}

@@ -1,0 +1,182 @@
+import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
+// Note: Ensure this path to your CurrencyContext is correct for your project structure.
+import { CurrencyContext } from "../context/CurrencyContext";
+
+// The new course data, generated from your blog posts.
+const offeredCourses = [
+  {
+    id: "executive-assistant-mastery",
+    title: "Executive Assistant Mastery",
+    description: "Go beyond basic admin tasks. Learn to support C-suite executives by managing complex calendars, travel, and high-level communications to become an indispensable asset.",
+    duration: "6 Weeks",
+    price: 65000,
+  },
+  {
+    id: "customer-success-manager",
+    title: "Customer Success Manager",
+    description: "Master client retention and delight. Develop workflows for managing client needs, handling communications, and leading customer-facing teams effectively.",
+    duration: "5 Weeks",
+    price: 55000,
+  },
+  {
+    id: "social-media-strategy",
+    title: "Social Media Strategy & Management",
+    description: "Move from just posting to leading strategy. Master content planning, copywriting, graphic design, video editing, and AI tools to manage a brand's entire social presence.",
+    duration: "6 Weeks",
+    price: 70000,
+  },
+  {
+    id: "paid-traffic-ads-manager",
+    title: "Paid Traffic & Ads Management",
+    description: "Learn the high-value skill of managing paid ad campaigns on platforms like Meta, Google, and YouTube. Understand how to drive traffic, generate leads, and deliver sales.",
+    duration: "8 Weeks",
+    price: 90000,
+  },
+  {
+    id: "podcast-production-management",
+    title: "Podcast Production & Management",
+    description: "Manage a podcast from start to finish. Learn guest management, content scripting, audio editing coordination, and promotion strategies to grow a successful show.",
+    duration: "5 Weeks",
+    price: 50000,
+  },
+  {
+    id: "tech-automations-expert",
+    title: "Tech & Automations Expert",
+    description: "Become a tech powerhouse by learning to integrate platforms and automate workflows. This course covers essential tech stacks and how to leverage AI in operations.",
+    duration: "7 Weeks",
+    price: 85000,
+  },
+  {
+    id: "community-management-pro",
+    title: "Community Management Pro",
+    description: "Lead and nurture online communities. Develop engagement strategies, manage memberships, and create systems for both free and paid groups on any platform.",
+    duration: "4 Weeks",
+    price: 48000,
+  },
+  {
+    id: "content-marketing-manager",
+    title: "Content Marketing Manager",
+    description: "Oversee a brand's entire content ecosystem. Learn to write and repurpose blogs, emails, and social content with a deep understanding of SEO to drive traffic and leads.",
+    duration: "6 Weeks",
+    price: 75000,
+  },
+  {
+    id: "launch-affiliate-management",
+    title: "Launch & Affiliate Management",
+    description: "Specialize in revenue-generating projects. Master the art of managing product launches and affiliate programs, from planning and execution to profit-sharing models.",
+    duration: "8 Weeks",
+    price: 95000,
+  },
+  {
+    id: "pinterest-marketing-expert",
+    title: "Pinterest Marketing Expert",
+    description: "Harness the power of Pinterest for organic traffic and sales. This course combines SEO, graphic design, and content strategy specific to this unique visual search engine.",
+    duration: "4 Weeks",
+    price: 45000,
+  },
+  {
+    id: "professional-copywriting",
+    title: "Professional Copywriting for Web & Email",
+    description: "Master the art of persuasive writing. Learn to craft compelling copy for sales pages, emails, social posts, and blogs that converts readers into customers.",
+    duration: "7 Weeks",
+    price: 80000,
+  },
+  {
+    id: "unicorn-digital-marketing-assistant",
+    title: "Unicorn Digital Marketing Assistant",
+    description: "The ultimate entry-level course into marketing. Learn the core technical and strategic skills needed to support a marketing team and quickly advance your career.",
+    duration: "10 Weeks",
+    price: 120000,
+  },
+];
+
+const CourseList = () => {
+  const [sortBy, setSortBy] = useState("none");
+  const { symbol, rate } = useContext(CurrencyContext);
+
+  // Convert price and format with commas
+  const convert = (priceNgn) => {
+    const converted = priceNgn * rate;
+    return converted.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  // Sort courses based on the selected option
+  const sortedCourses = [...offeredCourses].sort((a, b) => {
+    if (sortBy === "price") return a.price - b.price;
+    if (sortBy === "duration") {
+      const weeksA = parseInt(a.duration);
+      const weeksB = parseInt(b.duration);
+      return weeksA - weeksB;
+    }
+    return 0;
+  });
+
+  // Handle the enroll action
+  const handleEnroll = (course) => {
+    const courseToStore = {
+      ...course,
+      price: course.price, // Storing the base price in NGN
+    };
+    localStorage.setItem("selectedCourse", JSON.stringify(courseToStore));
+    window.location.href = "/checkout";
+  };
+
+  return (
+    <>
+      <div className="d-flex justify-content-end mb-4">
+        <select
+          className="form-select w-auto"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          data-aos="fade-left"
+        >
+          <option value="none">Sort By</option>
+          <option value="price">Price (Low to High)</option>
+          <option value="duration">Duration (Shortest First)</option>
+        </select>
+      </div>
+
+      <div className="row">
+        {sortedCourses.map((course, idx) => (
+          <div
+            key={course.id}
+            className="col-md-4 mb-4"
+            data-aos="fade-up"
+            data-aos-delay={idx * 100}
+          >
+            <div className="card course-card h-100 shadow-sm">
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title">{course.title}</h5>
+                <p className="card-text">{course.description}</p>
+                <p className="text-primary fw-bold mb-1">{course.duration}</p>
+                <p className="text-success fw-semibold">
+                  {symbol}
+                  {convert(course.price)}
+                </p>
+                <Link
+                  to={`/courses/${course.id}`}
+                  className="mt-auto btn btn-outline-primary"
+                >
+                  View Details
+                </Link>
+                <button
+                  className="mt-2 btn btn-primary"
+                  onClick={() => handleEnroll(course)}
+                >
+                  Enroll Now
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
+
+// This line is crucial and was likely missing from your file.
+export default CourseList;

@@ -1,0 +1,20 @@
+/* styles/EventDetail.css */
+.event-detail-section {
+  background-color: #fff;
+}
+
+.event-detail-section h2 {
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.event-detail-section img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.event-detail-section p {
+  font-size: 1rem;
+  line-height: 1.7;
+}

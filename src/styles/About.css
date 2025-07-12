@@ -1,0 +1,47 @@
+.about-section {
+  background-color: #f9fafb;
+  color: #333;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #001c3c;
+}
+
+h3 {
+  font-weight: 600;
+  margin-top: 1.5rem;
+  color: #007bff;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-top: 0.5rem;
+}
+
+ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+ul li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+
+.about-section h2 {
+  font-weight: 600;
+}
+
+.icon-box h4 {
+  font-weight: 500;
+  color: #007bff;
+}
+
+.icon-box p {
+  font-size: 15px;
+  color: #555;
+}

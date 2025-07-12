@@ -1,0 +1,23 @@
+.blog-list .card {
+  border: none;
+  transition: transform 0.2s;
+}
+.blog-list .card:hover {
+  transform: translateY(-5px);
+}
+.blog-list .card-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+.blog-list .card-text {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.blog-coming-soon {
+  background-color: #f8f9fa;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+

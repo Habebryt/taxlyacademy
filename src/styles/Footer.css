@@ -1,0 +1,27 @@
+.footer {
+  background-color: #212529;
+  color: #fff;
+}
+
+.footer-link {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.footer i {
+  transition: transform 0.3s ease;
+}
+
+.footer i:hover {
+  transform: scale(1.2);
+}
+.footer .social-icons {
+  display: flex;
+  gap: 15px;
+}

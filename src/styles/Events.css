@@ -1,0 +1,14 @@
+/* styles/Events.css */
+.event-section h2 {
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 1.5rem;
+}
+
+.event-section {
+  background-color: #f9f9f9;
+}
+
+.event-section .row {
+  row-gap: 2rem;
+}

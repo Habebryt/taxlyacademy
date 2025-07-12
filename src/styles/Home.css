@@ -1,0 +1,11 @@
+.hero-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url('/public/images/hero-banner.jpg') center/cover no-repeat;
+  min-height: 90vh;
+}
+
+.highlight-section {
+  background: #007bff;
+  color: white;
+  padding: 60px 0;
+}
