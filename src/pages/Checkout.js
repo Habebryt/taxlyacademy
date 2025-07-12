@@ -9,9 +9,9 @@ import { usePaystackPayment } from 'react-paystack'; // Import Paystack hook
 
 // Define bank account options
 const bankAccounts = [
-  { bankName: "GTBank PLC", accountName: "Taxly Academy", accountNumber: "0123456789" },
-  { bankName: "Kuda Microfinance Bank", accountName: "Taxly Academy", accountNumber: "9876543210" },
-  { bankName: "OPay Digital Services", accountName: "Taxly Academy", accountNumber: "5556667778" },
+  { bankName: "UBA", accountName: "Taxly Africa Limited", accountNumber: "1028332283" },
+  { bankName: "Fidelity Bank", accountName: "Taxly Africa Limited", accountNumber: "5601514348" },
+  // { bankName: "OPay Digital Services", accountName: "Taxly Academy", accountNumber: "5556667778" },
 ];
 
 // This new component will only be rendered when we have valid course info,

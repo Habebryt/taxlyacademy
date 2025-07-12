@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { CurrencyContext } from "../context/CurrencyContext";
 import { Link } from "react-router-dom";
@@ -154,7 +154,9 @@ const initialCourses = [
 ];
 
 const Courses = () => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("none");
+  const [layoutView, setLayoutView] = useState('grid-3'); // 'grid-3' or 'table'
   const { symbol, rate } = useContext(CurrencyContext);
 
   // Convert price and format with commas
@@ -166,23 +168,39 @@ const Courses = () => {
     });
   };
 
-  // Sort courses
-  const sortedCourses = [...initialCourses].sort((a, b) => {
-    switch (sortBy) {
-      case "price-asc":
-        return a.price - b.price;
-      case "price-desc":
-        return b.price - a.price;
-      case "duration-asc":
-        return parseInt(a.duration) - parseInt(b.duration);
-      case "duration-desc":
-        return parseInt(b.duration) - parseInt(a.duration);
-      case "title-asc":
-        return a.title.localeCompare(b.title);
-      default:
-        return 0;
+  // Memoized sorting and filtering logic
+  const filteredCourses = useMemo(() => {
+    let courses = [...initialCourses];
+
+    // Filter by search term
+    if (searchTerm) {
+      courses = courses.filter(course =>
+        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-  });
+
+    // Sort courses
+    courses.sort((a, b) => {
+      switch (sortBy) {
+        case "price-asc":
+          return a.price - b.price;
+        case "price-desc":
+          return b.price - a.price;
+        case "duration-asc":
+          return parseInt(a.duration) - parseInt(b.duration);
+        case "duration-desc":
+          return parseInt(b.duration) - parseInt(a.duration);
+        case "title-asc":
+          return a.title.localeCompare(b.title);
+        default:
+          return 0;
+      }
+    });
+
+    return courses;
+  }, [searchTerm, sortBy]);
+
 
   const handleEnroll = (course) => {
     const courseToStore = {
@@ -217,67 +235,128 @@ const Courses = () => {
 
       <section className="courses-section py-5">
         <div className="container">
-          <div className="d-flex justify-content-end mb-4">
-            <select
-              className="form-select w-auto"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              data-aos="fade-left"
-            >
-              <option value="none">Sort By</option>
-              <option value="price-asc">Price (Low to High)</option>
-              <option value="price-desc">Price (High to Low)</option>
-              <option value="duration-asc">Duration (Shortest First)</option>
-              <option value="duration-desc">Duration (Longest First)</option>
-              <option value="title-asc">Alphabetical (A-Z)</option>
-            </select>
+          <div className="row mb-4 align-items-center">
+            <div className="col-md-4">
+               <input 
+                type="text"
+                className="form-control"
+                placeholder="Search courses..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+               />
+            </div>
+            <div className="col-md-4">
+              <select
+                className="form-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="none">Sort By</option>
+                <option value="price-asc">Price (Low to High)</option>
+                <option value="price-desc">Price (High to Low)</option>
+                <option value="duration-asc">Duration (Shortest First)</option>
+                <option value="duration-desc">Duration (Longest First)</option>
+                <option value="title-asc">Alphabetical (A-Z)</option>
+              </select>
+            </div>
+            <div className="col-md-4 d-flex justify-content-end">
+                <div className="btn-group">
+                    <button title="Grid View" className={`btn ${layoutView === 'grid-3' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setLayoutView('grid-3')}>Grid</button>
+                    <button title="Table View" className={`btn ${layoutView === 'table' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setLayoutView('table')}>List</button>
+                </div>
+            </div>
           </div>
 
           <p className="text-center text-muted mb-5" data-aos="fade-up">
             Learn in-demand back-office and remote work skills tailored for
             African professionals.
           </p>
-
-          <div className="row">
-            {sortedCourses.map((course, idx) => (
-              <div
-                key={course.id}
-                className="col-md-4 mb-4"
-                data-aos="fade-up"
-                data-aos-delay={idx * 100}
-              >
-                <div className="card course-card h-100 shadow-sm">
-                  <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">{course.title}</h5>
-                    <p className="card-text">{course.description}</p>
-                    <p className="text-primary fw-bold mb-1">
-                      {course.duration}
-                    </p>
-                    <p className="text-success fw-semibold">
-                      {symbol}
-                      {convert(course.price)}
-                    </p>
-                    <Link
-                      to={`/courses/${course.id}`}
-                      className="mt-auto btn btn-outline-primary"
-                    >
-                      View Details
-                    </Link>
-                    <a
-                      href="#!"
-                      className="mt-2 btn btn-primary"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleEnroll(course);
-                      }}
-                    >
-                      Enroll Now
-                    </a>
+          
+          {/* --- Conditional Layout Rendering --- */}
+          {layoutView === 'grid-3' && (
+            <div className="row">
+              {filteredCourses.map((course, idx) => (
+                <div
+                  key={course.id}
+                  className="col-md-4 mb-4"
+                  data-aos="fade-up"
+                  data-aos-delay={idx * 100}
+                >
+                  <div className="card course-card h-100 shadow-sm">
+                    <div className="card-body d-flex flex-column">
+                      <h5 className="card-title">{course.title}</h5>
+                      <p className="card-text">{course.description}</p>
+                      <p className="text-primary fw-bold mb-1">
+                        {course.duration}
+                      </p>
+                      <p className="text-success fw-semibold">
+                        {symbol}
+                        {convert(course.price)}
+                      </p>
+                      <Link
+                        to={`/courses/${course.id}`}
+                        className="mt-auto btn btn-outline-primary"
+                      >
+                        View Details
+                      </Link>
+                      <a
+                        href="#!"
+                        className="mt-2 btn btn-primary"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleEnroll(course);
+                        }}
+                      >
+                        Enroll Now
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+
+          {layoutView === 'table' && (
+            <div className="table-responsive">
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Course Title</th>
+                    <th scope="col">Duration</th>
+                    <th scope="col">Price</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredCourses.map((course, idx) => (
+                    <tr key={course.id}>
+                      <th scope="row">{idx + 1}</th>
+                      <td>
+                        <Link to={`/courses/${course.id}`} className="text-decoration-none">{course.title}</Link>
+                        <p className="text-muted small mb-0">{course.description}</p>
+                      </td>
+                      <td>{course.duration}</td>
+                      <td>{symbol}{convert(course.price)}</td>
+                      <td>
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleEnroll(course)}
+                        >
+                          Enroll
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {filteredCourses.length === 0 && (
+            <p className="text-center mt-5">No courses match your search.</p>
+          )}
+
         </div>
       </section>
     </>
