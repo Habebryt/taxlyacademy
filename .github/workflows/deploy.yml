@@ -1,0 +1,34 @@
+name: 🚀 Deploy to Namecheap via FTP
+
+on:
+  push:
+    branches:
+      - main  # change if your default branch is different
+
+jobs:
+  ftp-deploy:
+    name: 📂 Upload via FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 🛠️ Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: 📂 Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: build
+          server-dir: ${{ secrets.FTP_TARGET_DIR }}
