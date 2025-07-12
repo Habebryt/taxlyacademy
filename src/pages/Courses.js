@@ -1,11 +1,11 @@
 import React, { useState, useContext, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { CurrencyContext } from "../context/CurrencyContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Courses.css";
 import Hero from "../components/Hero";
 
-// Course list with prices in NGN
+// Using the more detailed and consistent course data structure
 const initialCourses = [
   {
     id: "executive-assistant-mastery",
@@ -156,11 +156,14 @@ const initialCourses = [
 const Courses = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("none");
-  const [layoutView, setLayoutView] = useState('grid-3'); // 'grid-3' or 'table'
-  const { symbol, rate } = useContext(CurrencyContext);
+  const [layoutView, setLayoutView] = useState('grid-3');
+  // FIX: Destructure the full currency context object
+  const { symbol, rate, code } = useContext(CurrencyContext);
+  const navigate = useNavigate();
 
   // Convert price and format with commas
   const convert = (priceNgn) => {
+    if (!rate) return '...'; // Handle case where rate is not yet loaded
     const converted = priceNgn * rate;
     return converted.toLocaleString(undefined, {
       minimumFractionDigits: 2,
@@ -203,12 +206,7 @@ const Courses = () => {
 
 
   const handleEnroll = (course) => {
-    const courseToStore = {
-      ...course,
-      price: course.price,
-    };
-    localStorage.setItem("selectedCourse", JSON.stringify(courseToStore));
-    window.location.href = "/checkout";
+    navigate(`/checkout?course=${course.id}`);
   };
 
   return (
@@ -260,10 +258,14 @@ const Courses = () => {
               </select>
             </div>
             <div className="col-md-4 d-flex justify-content-end">
-                <div className="btn-group">
+                <div className="btn-group me-2">
                     <button title="Grid View" className={`btn ${layoutView === 'grid-3' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setLayoutView('grid-3')}>Grid</button>
                     <button title="Table View" className={`btn ${layoutView === 'table' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setLayoutView('table')}>List</button>
                 </div>
+                {/* FIX: Add a badge to show the detected currency */}
+                <span className="badge bg-info d-flex align-items-center">
+                    Currency: {code || '...'}
+                </span>
             </div>
           </div>
 
@@ -299,16 +301,12 @@ const Courses = () => {
                       >
                         View Details
                       </Link>
-                      <a
-                        href="#!"
+                      <button
                         className="mt-2 btn btn-primary"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleEnroll(course);
-                        }}
+                        onClick={() => handleEnroll(course)}
                       >
                         Enroll Now
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>

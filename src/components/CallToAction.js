@@ -1,4 +1,6 @@
 import React from 'react';
+// Import the Link component for client-side navigation
+import { Link } from 'react-router-dom';
 import '../styles/CallToAction.css';
 
 const CallToAction = () => {
@@ -7,9 +9,10 @@ const CallToAction = () => {
       <div className="container">
         <h2 className="mb-3">Ready to Level Up Your Virtual Skills?</h2>
         <p className="mb-4 lead">Join thousands of learners getting certified and hired worldwide.</p>
-        <a href="/courses" className="btn btn-primary btn-lg">
+        {/* FIX: Use the Link component instead of a standard <a> tag */}
+        <Link to="/courses" className="btn btn-primary btn-lg">
           Join Now
-        </a>
+        </Link>
       </div>
     </section>
   );
