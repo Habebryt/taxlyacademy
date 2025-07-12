@@ -34,8 +34,15 @@
     "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
+  "description": "Backend for Taxly Academy",
+  "main": "server.js",
+ 
+  "keywords": [],
+  "author": "Taxly Academy Team",
+  "license": "ISC",
+  
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "react-app-rewired start, node server.js",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
