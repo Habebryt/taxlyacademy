@@ -23,6 +23,8 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         server-dir: ${{ secrets.SERVER_PATH }}
+        protocol: sftp
+        FTP & explicit FTPS port:  21
         # Optional: Add exclude rules if you don't want to upload certain files
         # exclude: |
         #   **/.git*
