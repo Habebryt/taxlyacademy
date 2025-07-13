@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { CurrencyContext } from "../context/CurrencyContext";
-import { useParams, Link } from "react-router-dom";
-import "../styles/CourseDetail.css"; // Make sure to have this CSS file for styling
+// Import Link and useNavigate for routing
+import { useParams, Link, useNavigate } from "react-router-dom";
+import "../styles/CourseDetail.css";
 import Hero from "../components/Hero";
 
 // This new data structure is much more detailed, based on your blog posts.
@@ -41,7 +42,7 @@ const courseData = {
       "Managing multiple platforms and scheduling tools efficiently.",
     ],
     whoIsThisFor: "Aspiring social media managers, content creators, and marketing assistants who want to take on a strategic role and manage a brand's entire social media presence.",
-     curriculum: [
+    curriculum: [
       "Week 1: Foundations of Social Media Strategy",
       "Week 2: Content Creation & Curation (Canva, CapCut)",
       "Week 3: Advanced Copywriting & Community Engagement",
@@ -230,16 +231,12 @@ const courseData = {
 const CourseDetail = () => {
   const { id } = useParams();
   const course = courseData[id];
-  const { symbol, rate } = useContext(CurrencyContext);
+  // FIX: Destructure the 'code' as well to display it for debugging
+  const { symbol, rate, code } = useContext(CurrencyContext);
+  const navigate = useNavigate();
 
-  const handleEnroll = (courseDetails) => {
-    const courseToStore = {
-      id: id, // Use the id from URL params
-      title: courseDetails.title,
-      price: courseDetails.price, // Store the base price in NGN
-    };
-    localStorage.setItem("selectedCourse", JSON.stringify(courseToStore));
-    window.location.href = "/checkout";
+  const handleEnroll = () => {
+    navigate(`/checkout?course=${id}`);
   };
 
   if (!course) {
@@ -331,9 +328,13 @@ const CourseDetail = () => {
                   {displayPrice}
                 </p>
                 <p className="text-muted">Duration: {course.duration}</p>
+                {/* FIX: Add a small helper to display the detected currency for debugging */}
+                <p className="text-muted small mb-3">
+                  (Currency detected: {code || 'Loading...'})
+                </p>
                 <button
-                  className="btn btn-primary btn-lg w-100 mt-3"
-                  onClick={() => handleEnroll(course)}
+                  className="btn btn-primary btn-lg w-100"
+                  onClick={handleEnroll}
                 >
                   Enroll Now
                 </button>

@@ -1,0 +1,357 @@
+{
+    "count": 833687,
+    "results": [
+        {
+            "salary_min": 27500,
+            "title": "Early Years Educator L3",
+            "longitude": -2.55023,
+            "__CLASS__": "Adzuna::API::Response::Job",
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJzIjoiR0V5N212MWY4QkdGME1yeFBqUkYzQSIsImkiOiI1MjU4MjI0MTg1In0.Jw7yhM8C9Jh1Fyh-TNZImE-WM_wj6o502TdDhIY3or0",
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5258224185?utm_medium=api&utm_source=ff97ef9b",
+            "category": {
+                "tag": "teaching-jobs",
+                "label": "Teaching Jobs",
+                "__CLASS__": "Adzuna::API::Response::Category"
+            },
+            "location": {
+                "__CLASS__": "Adzuna::API::Response::Location",
+                "display_name": "Stoke Gifford, Bristol",
+                "area": [
+                    "UK",
+                    "South West England",
+                    "Bristol",
+                    "Stoke Gifford"
+                ]
+            },
+            "created": "2025-06-19T16:06:00Z",
+            "contract_time": "full_time",
+            "salary_is_predicted": "0",
+            "description": "Join Partou, where we put children in the lead! We're seeking dedicated and qualified Level 3 early years practitioners to join our Partou Love Being Little family! Full time 40 hours a week and a competitive salary of £27500 per annum. At Partou, we are committed to providing exceptional care, compassion, and continuous learning. These values guide our interactions with children, families, and team members, ensuring a nurturing and supportive environment. Some of the benefits of working as par…",
+            "company": {
+                "display_name": "Partou",
+                "__CLASS__": "Adzuna::API::Response::Company"
+            },
+            "salary_max": 27500,
+            "latitude": 51.519199,
+            "id": "5258224185",
+            "contract_type": "permanent"
+        },
+        {
+            "latitude": 51.472198,
+            "salary_max": 27872,
+            "id": "5294088970",
+            "contract_type": "permanent",
+            "salary_is_predicted": "0",
+            "created": "2025-07-09T19:56:00Z",
+            "contract_time": "full_time",
+            "company": {
+                "display_name": "Partou",
+                "__CLASS__": "Adzuna::API::Response::Company"
+            },
+            "description": "Join Partou, where we put children in the lead! 40 hours a week full time - starting from ££13.40 per hour We're seeking dedicated and qualified level 2 early years practitioners to join our Lavender Hill family! At Partou, we are committed to providing exceptional care, compassion, and continuous learning. These values guide our interactions with children, families, and team members, ensuring a nurturing and supportive environment. Level 2 nursery practitioner – qualifications & experience req…",
+            "__CLASS__": "Adzuna::API::Response::Job",
+            "longitude": -0.16541,
+            "location": {
+                "__CLASS__": "Adzuna::API::Response::Location",
+                "area": [
+                    "UK",
+                    "London",
+                    "South West London",
+                    "Battersea"
+                ],
+                "display_name": "Battersea, South West London"
+            },
+            "category": {
+                "__CLASS__": "Adzuna::API::Response::Category",
+                "label": "Teaching Jobs",
+                "tag": "teaching-jobs"
+            },
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5294088970?utm_medium=api&utm_source=ff97ef9b",
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJzIjoiR0V5N212MWY4QkdGME1yeFBqUkYzQSIsImkiOiI1Mjk0MDg4OTcwIn0.DxgA_STQWStSLlWEzq6UZLrk7qJsFJObV3xGjM_L9NM",
+            "title": "Early Years Practitioner L2",
+            "salary_min": 27872
+        },
+        {
+            "contract_type": "permanent",
+            "id": "5282136428",
+            "salary_max": 40000,
+            "latitude": 51.638802,
+            "description": "Join Partou, where we put children in the lead! We're seeking a dedicated and passionate Nursery Manager to join us at Partou Shepherd's Lane . As a Nursery manager, you'll have the opportunity to create a safe and supportive environment for children and families. At Partou, we are committed to providing exceptional care, compassion, and continuous learning. These values guide our interactions with children, families, and team members, ensuring an encouraging and supportive environment for all.…",
+            "company": {
+                "display_name": "Partou",
+                "__CLASS__": "Adzuna::API::Response::Company"
+            },
+            "contract_time": "full_time",
+            "created": "2025-07-03T17:48:00Z",
+            "salary_is_predicted": "0",
+            "category": {
+                "label": "Teaching Jobs",
+                "__CLASS__": "Adzuna::API::Response::Category",
+                "tag": "teaching-jobs"
+            },
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5282136428?utm_medium=api&utm_source=ff97ef9b",
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJzIjoiR0V5N212MWY4QkdGME1yeFBqUkYzQSIsImkiOiI1MjgyMTM2NDI4In0.6jHRMEiQFcc8LMX4St_-GrOKyoePuSxcV7cpHsABE6I",
+            "location": {
+                "__CLASS__": "Adzuna::API::Response::Location",
+                "display_name": "Rickmansworth, Hertfordshire",
+                "area": [
+                    "UK",
+                    "Eastern England",
+                    "Hertfordshire",
+                    "Rickmansworth"
+                ]
+            },
+            "longitude": -0.46919,
+            "__CLASS__": "Adzuna::API::Response::Job",
+            "salary_min": 40000,
+            "title": "Nursery Manager"
+        },
+        {
+            "location": {
+                "__CLASS__": "Adzuna::API::Response::Location",
+                "area": [
+                    "UK",
+                    "Yorkshire And The Humber",
+                    "West Yorkshire",
+                    "Leeds"
+                ],
+                "display_name": "Leeds, West Yorkshire"
+            },
+            "category": {
+                "tag": "teaching-jobs",
+                "label": "Teaching Jobs",
+                "__CLASS__": "Adzuna::API::Response::Category"
+            },
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJpIjoiNTI2MDAyMzAxMiIsInMiOiJHRXk3bXYxZjhCR0YwTXJ4UGpSRjNBIn0.ZppJbbly3rYZSWwc-REAHHtWk0kq4gi8RY8thnxT61k",
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5260023012?utm_medium=api&utm_source=ff97ef9b",
+            "__CLASS__": "Adzuna::API::Response::Job",
+            "longitude": -1.54912,
+            "title": "Early Years Educator L3",
+            "salary_min": 27000,
+            "id": "5260023012",
+            "contract_type": "permanent",
+            "latitude": 53.799599,
+            "salary_max": 27000,
+            "company": {
+                "__CLASS__": "Adzuna::API::Response::Company",
+                "display_name": "Partou"
+            },
+            "description": "Join Partou, where we put children in the lead! We're seeking dedicated and qualified Level 3 early years practitioners to join our family! Full time 40 hours a week and a competitive salary starting from £27,000 per year. At Partou, we are committed to providing exceptional care, compassion, and continuous learning. These values guide our interactions with children, families, and team members, ensuring a nurturing and supportive environment. Some of the benefits of working as part of the Parto…",
+            "salary_is_predicted": "0",
+            "created": "2025-06-20T15:58:59Z",
+            "contract_time": "full_time"
+        },
+        {
+            "description": "Join Partou, where we put children in the lead! Up to 30 hours a week full time - £ 26,707.00 per annum. We're seeking dedicated and qualified level 2 early years practitioners to join our Partou Thornbury family! At Partou, we are committed to providing exceptional care, compassion, and continuous learning. These values guide our interactions with children, families, and team members, ensuring a nurturing and supportive environment. Level 2 nursery practitioner – qualifications & experience re…",
+            "company": {
+                "__CLASS__": "Adzuna::API::Response::Company",
+                "display_name": "Partou"
+            },
+            "created": "2025-06-19T16:06:07Z",
+            "contract_time": "full_time",
+            "salary_is_predicted": "0",
+            "id": "5258224197",
+            "contract_type": "permanent",
+            "salary_max": 26707,
+            "latitude": 50.810398,
+            "salary_min": 26707,
+            "title": "Early Years Practitioner L2",
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJzIjoiR0V5N212MWY4QkdGME1yeFBqUkYzQSIsImkiOiI1MjU4MjI0MTk3In0.wC2uCnhpLBzkbhfX7oNQBX5Mx0tLdW6m-K2JTXBoKeE",
+            "category": {
+                "tag": "teaching-jobs",
+                "label": "Teaching Jobs",
+                "__CLASS__": "Adzuna::API::Response::Category"
+            },
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5258224197?utm_medium=api&utm_source=ff97ef9b",
+            "location": {
+                "__CLASS__": "Adzuna::API::Response::Location",
+                "area": [
+                    "UK",
+                    "South West England",
+                    "Devon",
+                    "Holsworthy",
+                    "Thornbury"
+                ],
+                "display_name": "Thornbury, Holsworthy"
+            },
+            "longitude": -4.35377,
+            "__CLASS__": "Adzuna::API::Response::Job"
+        },
+        {
+            "salary_min": 28400,
+            "title": "Room Leader",
+            "longitude": -2.70344,
+            "__CLASS__": "Adzuna::API::Response::Job",
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5294088952?utm_medium=api&utm_source=ff97ef9b",
+            "category": {
+                "__CLASS__": "Adzuna::API::Response::Category",
+                "label": "Teaching Jobs",
+                "tag": "teaching-jobs"
+            },
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJpIjoiNTI5NDA4ODk1MiIsInMiOiJHRXk3bXYxZjhCR0YwTXJ4UGpSRjNBIn0.tW4LUIfZMx1YPwLnTM6ErHQrkR4uQ4YNyL5Dk__T1gY",
+            "location": {
+                "__CLASS__": "Adzuna::API::Response::Location",
+                "display_name": "Preston, Lancashire",
+                "area": [
+                    "UK",
+                    "North West England",
+                    "Lancashire",
+                    "Preston"
+                ]
+            },
+            "created": "2025-07-09T19:55:59Z",
+            "contract_time": "full_time",
+            "salary_is_predicted": "0",
+            "description": "Join Partou, where children are the leaders! We are currently recruiting for a Room Leader at Partou Bluebells for 40 hours per week and a competitive salary of £28,400. A fantastic opportunity for a nursery practitioner to take the first step on their development journey. Some of the benefits of working as part of the Partou Family: Genuine opportunities for career progression Access to professional training Pension scheme 60% childcare discount, Enhanced maternity/paternity leave, Rewards and…",
+            "company": {
+                "display_name": "Partou",
+                "__CLASS__": "Adzuna::API::Response::Company"
+            },
+            "salary_max": 28400,
+            "latitude": 53.757702,
+            "id": "5294088952",
+            "contract_type": "permanent"
+        },
+        {
+            "company": {
+                "display_name": "Partou",
+                "__CLASS__": "Adzuna::API::Response::Company"
+            },
+            "description": "Join Partou, where children are the leaders! We’re looking for a Deputy Manager to join us at Partou Hilltops and help support our Nursery Manager and Senior Deputy Manager in the smooth running of our setting. 40 hours per week and a competitive salary of £29,250. You will need to be level 3 early years qualified for this role and have at least a year's experience in a nursery setting. Some of the benefits of working as part of the Partou Family: Genuine opportunities for career progression Ac…",
+            "salary_is_predicted": "0",
+            "contract_time": "full_time",
+            "created": "2025-07-08T19:55:04Z",
+            "contract_type": "permanent",
+            "id": "5292523189",
+            "latitude": 53.652699,
+            "salary_max": 29250,
+            "title": "Deputy Manager",
+            "salary_min": 29250,
+            "location": {
+                "display_name": "Chorley, Lancashire",
+                "area": [
+                    "UK",
+                    "North West England",
+                    "Lancashire",
+                    "Chorley"
+                ],
+                "__CLASS__": "Adzuna::API::Response::Location"
+            },
+            "category": {
+                "tag": "teaching-jobs",
+                "label": "Teaching Jobs",
+                "__CLASS__": "Adzuna::API::Response::Category"
+            },
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJpIjoiNTI5MjUyMzE4OSIsInMiOiJHRXk3bXYxZjhCR0YwTXJ4UGpSRjNBIn0.AU1Umbn-ugKPoN5RzVnJXVkfNIS26-78dYTeLTAUVl8",
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5292523189?utm_medium=api&utm_source=ff97ef9b",
+            "__CLASS__": "Adzuna::API::Response::Job",
+            "longitude": -2.63241
+        },
+        {
+            "created": "2025-06-20T15:59:00Z",
+            "contract_time": "full_time",
+            "salary_is_predicted": "0",
+            "description": "Join Partou, where children are the leaders! We are currently recruiting for a Room Leader at Little People for 40 Hours per week and a competitive salary of £28,400 per annum. A fantastic opportunity for a nursery practitioner to take the first step on their development journey. Some of the benefits of working as part of the Partou Family: Genuine opportunities for career progression Access to professional training Pension scheme 60% childcare discount, Enhanced maternity/paternity leave, Rewa…",
+            "company": {
+                "__CLASS__": "Adzuna::API::Response::Company",
+                "display_name": "Partou"
+            },
+            "salary_max": 28400,
+            "latitude": 53.7869,
+            "id": "5260023029",
+            "contract_type": "permanent",
+            "salary_min": 28400,
+            "title": "Room Leader",
+            "longitude": -2.24532,
+            "__CLASS__": "Adzuna::API::Response::Job",
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJpIjoiNTI2MDAyMzAyOSIsInMiOiJHRXk3bXYxZjhCR0YwTXJ4UGpSRjNBIn0.npGKSAjfK6YEkNFap26zal30o2OgblWmP2AvlXSaM2U",
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5260023029?utm_medium=api&utm_source=ff97ef9b",
+            "category": {
+                "tag": "teaching-jobs",
+                "label": "Teaching Jobs",
+                "__CLASS__": "Adzuna::API::Response::Category"
+            },
+            "location": {
+                "__CLASS__": "Adzuna::API::Response::Location",
+                "area": [
+                    "UK",
+                    "North West England",
+                    "Lancashire",
+                    "Burnley"
+                ],
+                "display_name": "Burnley, Lancashire"
+            }
+        },
+        {
+            "title": "Kitchen Assistant - Bank - Care Home",
+            "salary_min": 29619,
+            "location": {
+                "area": [
+                    "UK",
+                    "South West England",
+                    "Gloucestershire",
+                    "Cheltenham",
+                    "Badgeworth"
+                ],
+                "display_name": "Badgeworth, Cheltenham",
+                "__CLASS__": "Adzuna::API::Response::Location"
+            },
+            "category": {
+                "tag": "hospitality-catering-jobs",
+                "label": "Hospitality & Catering Jobs",
+                "__CLASS__": "Adzuna::API::Response::Category"
+            },
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5287183849?utm_medium=api&utm_source=ff97ef9b",
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJpIjoiNTI4NzE4Mzg0OSIsInMiOiJHRXk3bXYxZjhCR0YwTXJ4UGpSRjNBIn0.4X6VfaEloz5Npkoi316chT-ons3xm9pbelRff8fE5jk",
+            "__CLASS__": "Adzuna::API::Response::Job",
+            "longitude": -2.142541,
+            "company": {
+                "__CLASS__": "Adzuna::API::Response::Company",
+                "display_name": "Barchester Healthcare"
+            },
+            "description": "ABOUT THE ROLE As a Bank Kitchen Assistant at a Barchester care home, you'll help to provide the first-class food and hospitality that enable us to give our residents exceptional all-round care and support. A healthy, nutritious diet is vital to ensuring our residents' wellbeing and helping them enjoy daily life with us, which is why the role of Bank Kitchen Assistant is so important. Providing cover for any planned or unplanned absences, you'll help to produce meals and create a fulfilling din…",
+            "salary_is_predicted": "0",
+            "created": "2025-07-05T12:05:35Z",
+            "contract_type": "permanent",
+            "id": "5287183849",
+            "latitude": 51.87147,
+            "salary_max": 29619
+        },
+        {
+            "description": "ABOUT THE ROLE As a Bank Care Assistant at a Barchester care home, you'll help residents enjoy each day by making sure they get the quality care and support they deserve. You'll assist with daily living, providing support and companionship and sharing great moments and memories too. It's a chance to bring your dedication and compassion to a fulfilling environment. Every day will be different, so you can expect to undertake work that's as varied as it is rewarding. As a Bank Care Assistant, you …",
+            "company": {
+                "__CLASS__": "Adzuna::API::Response::Company",
+                "display_name": "Barchester Healthcare"
+            },
+            "created": "2025-06-25T11:43:55Z",
+            "salary_min": 29619,
+            "title": "Care Assistant - Bank - Care Home",
+            "salary_is_predicted": "0",
+            "category": {
+                "__CLASS__": "Adzuna::API::Response::Category",
+                "label": "Healthcare & Nursing Jobs",
+                "tag": "healthcare-nursing-jobs"
+            },
+            "redirect_url": "https://www.adzuna.co.uk/jobs/details/5267229396?utm_medium=api&utm_source=ff97ef9b",
+            "adref": "eyJhbGciOiJIUzI1NiJ9.eyJzIjoiR0V5N212MWY4QkdGME1yeFBqUkYzQSIsImkiOiI1MjY3MjI5Mzk2In0.KgFqc00dNWeP5QYnt0ZmOsljbMCpx-uCNXg23vE6h1A",
+            "location": {
+                "display_name": "Earley, Reading",
+                "area": [
+                    "UK",
+                    "South East England",
+                    "Berkshire",
+                    "Reading",
+                    "Earley"
+                ],
+                "__CLASS__": "Adzuna::API::Response::Location"
+            },
+            "id": "5267229396",
+            "salary_max": 29619,
+            "longitude": -0.909955,
+            "__CLASS__": "Adzuna::API::Response::Job",
+            "latitude": 51.427394
+        }
+    ],
+    "mean": 41389.45,
+    "__CLASS__": "Adzuna::API::Response::JobSearchResults"
+}
