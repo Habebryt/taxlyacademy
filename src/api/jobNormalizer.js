@@ -26,6 +26,37 @@ const getCurrencyForCountry = (countryCode) => {
 };
 
 /**
+ * Parses a salary string (e.g., "$50k", "£30000") into structured data.
+ * @param {string} salaryStr - The salary string from the API.
+ * @returns {object} An object with salaryMin, salaryMax, and currency.
+ */
+const parseSalaryString = (salaryStr) => {
+  if (!salaryStr || typeof salaryStr !== "string") {
+    return { salaryMin: null, salaryMax: null, currency: "USD" };
+  }
+
+  let currency = "USD";
+  if (salaryStr.includes("£")) currency = "GBP";
+  if (salaryStr.includes("€")) currency = "EUR";
+  if (salaryStr.includes("$")) currency = "USD";
+
+  // Remove currency symbols, commas, and get the number part
+  const numericPart = salaryStr.replace(/[^0-9.kK]/g, "");
+  let value = parseFloat(numericPart);
+
+  // Handle 'k' for thousands
+  if (salaryStr.toLowerCase().includes("k")) {
+    value *= 1000;
+  }
+
+  if (isNaN(value)) {
+    return { salaryMin: null, salaryMax: null, currency: "USD" };
+  }
+
+  return { salaryMin: value, salaryMax: value, currency: currency };
+};
+
+/**
  * Transforms a raw job object from a specific API source into a consistent,
  * standardized format that the rest of the application can use.
  * @param {object} job - The raw job object from the API.
@@ -34,11 +65,8 @@ const getCurrencyForCountry = (countryCode) => {
  * @returns {object|null} A standardized job object, or null if normalization fails.
  */
 export const normalizeJob = (job, source, options = {}) => {
-  // Always wrap in a try...catch to prevent a single bad job object
-  // from crashing the entire application.
   try {
-    // Return null if the job object is invalid
-    if (!job || !job.id) {
+    if (!job || (!job.id && !job.jobId)) {
       return null;
     }
 
@@ -83,18 +111,51 @@ export const normalizeJob = (job, source, options = {}) => {
           // Other fields are not provided by FindWork in the same way as Adzuna
           salaryMin: null,
           salaryMax: null,
-          currency: 'USD', // Default currency as it's not provided
+          currency: "USD", // Default currency as it's not provided
           category: "Tech", // Default category
           contractTime: null,
         };
 
-      // TODO: When you're ready to add Jooble, add its case here.
-      // case "Jooble":
-      //   return {
-      //     id: job.id,
-      //     title: job.title,
-      //     // ... and so on for all Jooble fields
-      //   };
+      case "Jooble":
+        const { salaryMin, salaryMax, currency } = parseSalaryString(
+          job.salary
+        );
+        return {
+          id: job.id,
+          title: job.title,
+          company: job.company || "N/A",
+          location: job.location,
+          // Clean the HTML from the snippet for the description
+          description:
+            job.snippet?.replace(/<[^>]+>/g, "") || "No description available.",
+          url: job.link,
+          source: "Jooble", // We label it as Jooble for our UI
+          postedDate: new Date(job.updated),
+          contractType: job.type,
+          salaryMin: salaryMin,
+          salaryMax: salaryMax,
+          currency: currency,
+          category: "General", // Jooble doesn't provide a category
+          contractTime: null, // Not provided
+        };
+
+      case "Reed":
+        return {
+          id: job.jobId, // Use `jobId` for Reed
+          title: job.jobTitle,
+          company: job.employerName || "N/A",
+          location: job.locationName,
+          description: job.jobDescription,
+          url: job.jobUrl,
+          source: "Reed",
+          postedDate: new Date(job.date),
+          salaryMin: job.minimumSalary,
+          salaryMax: job.maximumSalary,
+          currency: job.currency,
+          category: "General",
+          contractType: null,
+          contractTime: null,
+        };
 
       // TODO: Add cases for "The Muse" and "FindWork" here later.
 

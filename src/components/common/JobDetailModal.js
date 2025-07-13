@@ -96,7 +96,7 @@ const JobDetailModal = ({ job, onClose }) => {
               Close
             </button>
             <a href={job.url} className="btn btn-primary fw-bold" target="_blank" rel="noopener noreferrer">
-              Apply on {job.source}
+              View and Apply on {job.source}
             </a>
           </div>
         </div>

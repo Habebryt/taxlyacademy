@@ -11,7 +11,7 @@ export const useJobSearch = () => {
 
   const [filters, setFilters] = useState({
     // A new filter to control which APIs are called
-    selectedSources: ['Adzuna', 'FindWork'],
+    selectedSources: ["Adzuna", "FindWork", "Jooble", "Reed"],
     // Common filters
     keywords: "remote virtual assistant",
     location: "",
@@ -29,7 +29,7 @@ export const useJobSearch = () => {
   useEffect(() => {
     const getCategories = async () => {
       // Only fetch Adzuna categories if Adzuna is a selected source
-      if (filters.selectedSources.includes('Adzuna')) {
+      if (filters.selectedSources.includes("Adzuna")) {
         setLoadingCategories(true);
         setCategories([]);
         const fetchedCategories = await fetchAdzunaCategories(filters.country);
@@ -43,42 +43,50 @@ export const useJobSearch = () => {
     getCategories();
   }, [filters.country, filters.selectedSources]);
 
-  const executeSearch = useCallback(async (page = 1) => {
-    // Do not search if no sources are selected
-    if (filters.selectedSources.length === 0) {
+  const executeSearch = useCallback(
+    async (page = 1) => {
+      if (filters.selectedSources.length === 0) {
         setJobs([]);
         setLoading(false);
         return;
-    }
-
-    setLoading(true);
-    setError("");
-    setCurrentPage(page);
-
-    try {
-      const apiParams = {
-        ...filters,
-        page,
-        max_days_old: filters.dateRange !== "all" ? parseInt(filters.dateRange, 10) : undefined,
-      };
-      
-      const fetchedJobs = await fetchJobsFromSources(filters.selectedSources, apiParams);
-      setJobs(fetchedJobs);
-
-    } catch (err) {
-      setError("An error occurred while fetching jobs.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters]);
+      }
+      setLoading(true);
+      setError("");
+      setCurrentPage(page);
+      try {
+        const apiParams = {
+          ...filters,
+          page,
+          max_days_old:
+            filters.dateRange !== "all"
+              ? parseInt(filters.dateRange, 10)
+              : undefined,
+        };
+        const fetchedJobs = await fetchJobsFromSources(
+          filters.selectedSources,
+          apiParams
+        );
+        // Simple sort to bring jobs with salary info to the top
+        fetchedJobs.sort(
+          (a, b) => (b.salaryMin ? 1 : 0) - (a.salaryMin ? 1 : 0)
+        );
+        setJobs(fetchedJobs);
+      } catch (err) {
+        setError("An error occurred while fetching jobs.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [filters]
+  );
 
   useEffect(() => {
     executeSearch(1);
   }, [executeSearch]);
 
   const handleFilterChange = (newFilters) => {
-    setFilters(prev => {
+    setFilters((prev) => {
       const updated = { ...prev, ...newFilters };
       if (newFilters.country && newFilters.country !== prev.country) {
         updated.category = "";
@@ -91,7 +99,6 @@ export const useJobSearch = () => {
     e?.preventDefault();
     executeSearch(1);
   };
-
   const handlePageChange = (newPage) => {
     if (newPage > 0) {
       executeSearch(newPage);
@@ -100,8 +107,16 @@ export const useJobSearch = () => {
   };
 
   return {
-    jobs, loading, error, filters, handleFilterChange, handleSearch,
-    currentPage, handlePageChange, categories, loadingCategories,
+    jobs,
+    loading,
+    error,
+    filters,
+    handleFilterChange,
+    handleSearch,
+    currentPage,
+    handlePageChange,
+    categories,
+    loadingCategories,
     hasMorePages: jobs.length >= 20,
   };
 };

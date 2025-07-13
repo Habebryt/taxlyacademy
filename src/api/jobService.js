@@ -6,7 +6,8 @@ import { normalizeJob } from "./jobNormalizer";
 // We keep all keys here for future use.
 const ADZUNA_APP_ID = process.env.REACT_APP_ADZUNA_APP_ID;
 const ADZUNA_APP_KEY = process.env.REACT_APP_ADZUNA_APP_KEY;
-// const JOOBLE_API_KEY = process.env.REACT_APP_JOOBLE_API_KEY;
+const JOOBLE_API_KEY = process.env.REACT_APP_JOOBLE_API_KEY;
+const REED_API_KEY = process.env.REACT_APP_REED_API_KEY;
 // const MUSE_API_KEY = process.env.REACT_APP_MUSE_API_KEY;
 const FINDWORK_API_KEY = process.env.REACT_APP_FINDWORK_API_KEY;
 
@@ -16,13 +17,13 @@ const FINDWORK_API_KEY = process.env.REACT_APP_FINDWORK_API_KEY;
 // This keeps the logic for each source clean and separated.
 
 /**
- * Fetches jobs specifically from the Adzuna API.
- * This function handles the detailed filtering that only Adzuna supports.
- * @param {object} filters - The filter state from the useJobSearch hook.
- * @returns {Promise<Array>} A promise that resolves to an array of normalized Adzuna jobs.
+ * 
+ * 
+ * @param {object} filters 
+ * @returns {Promise<Array>} 
  */
 const fetchFromAdzuna = async (filters) => {
-  // Destructure all possible Adzuna-related filters
+  // Destructure Adzuna-related filters
   const {
     country,
     page,
@@ -37,10 +38,8 @@ const fetchFromAdzuna = async (filters) => {
   } = filters;
   
 
-  // The API endpoint is dynamic based on the selected country
   const API_URL = `https://api.adzuna.com/v1/api/jobs/${country}/search/${page}`;
 
-  // Construct the query parameters, omitting any that are empty or null
   const params = {
     app_id: ADZUNA_APP_ID,
     app_key: ADZUNA_APP_KEY,
@@ -58,17 +57,15 @@ const fetchFromAdzuna = async (filters) => {
 
   const { data } = await axios.get(API_URL, { params });
   
-  // Pass the country code to the normalizer to get the correct currency
-  // The 'Adzuna' string tells the normalizer which logic to use
   return data.results.map(job => normalizeJob(job, "Adzuna", { countryCode: country })).filter(Boolean);
 };
 
-// TODO: When you are ready to add Jooble, create its fetcher function here.
-// const fetchFromJooble = async (filters) => { ... };
-
 const fetchFromFindWork = async (filters) => {
+  // const { keywords, location, isRemote } = filters;
+  // const API_URL = "https://findwork.dev/api/jobs/";
   const { keywords, location, isRemote } = filters;
-  const API_URL = "https://findwork.dev/api/jobs/";
+  // Use the local proxy path
+  const API_URL = "/api/findwork/jobs/";
 
   const params = {
     search: keywords,
@@ -89,43 +86,83 @@ const fetchFromFindWork = async (filters) => {
   return data.results.map(job => normalizeJob(job, "FindWork")).filter(Boolean);
 };
 
-// --- API Fetcher Configuration ---
-// This object maps a source name to its dedicated fetching function.
-// This is the key to making the system easily extensible.
-const API_FETCHER_CONFIG = {
-  Adzuna: fetchFromAdzuna,
-  FindWork: fetchFromFindWork
+const fetchFromJooble = async (filters) => {
+  const { keywords, location, page } = filters;
+  const API_URL = `https://jooble.org/api/${JOOBLE_API_KEY}`;
+  
+  const payload = {
+    keywords: keywords,
+    location: location,
+    page: page
+  };
+
+  const { data } = await axios.post(API_URL, payload);
+  return data.jobs.map(job => normalizeJob(job, "Jooble")).filter(Boolean);
+};
+/**
+ * 
+ * @param {object} filters 
+ * @returns {Promise<Array>} 
+ */
+const fetchFromReed = async (filters) => {
+  // const { keywords, location, page } = filters;
+  // const API_URL = "https://www.reed.co.uk/api/1.0/search";
+  const { keywords, location, page } = filters;
+  // Use the local proxy path
+  const API_URL = "/api/reed/search"; 
+
+  const params = {
+    keywords: keywords,
+    locationName: location,
+    resultsToSkip: (page - 1) * 20, 
+    resultsToTake: 20,
+  };
+
+  const config = {
+    auth: {
+      username: REED_API_KEY,
+      password: ''
+    },
+    params: params
+  };
+
+  const { data } = await axios.get(API_URL, config);
+  return data.results.map(job => normalizeJob(job, "Reed")).filter(Boolean);
 };
 
 
-// --- Main Exported Functions ---
+const API_FETCHER_CONFIG = {
+  Adzuna: fetchFromAdzuna,
+  FindWork: fetchFromFindWork,
+  Jooble: fetchFromJooble,
+  Reed: fetchFromReed,
+};
 
 /**
- * Fetches jobs from a list of specified sources by dispatching to the correct fetcher.
- * @param {Array<string>} sources - An array of source names (e.g., ['Adzuna']).
- * @param {object} filters - The global filter object passed to each fetcher.
- * @returns {Promise<Array>} A promise resolving to a flat array of all jobs from all sources.
+ * 
+ * @param {Array<string>} sources 
+ * @param {object} filters 
+ * @returns {Promise<Array>} 
  */
 export const fetchJobsFromSources = async (sources, filters) => {
-  // Create an array of promises, one for each requested source
   const promises = sources.map(source => {
     const fetcher = API_FETCHER_CONFIG[source];
     if (fetcher) {
-      // Call the specific fetcher function for the source
       return fetcher(filters).catch(error => {
-        console.error(`Error fetching from ${source}:`, error.message);
-        return []; // Return an empty array on failure to prevent the whole search from failing
+        if (error.response) {
+            console.error(`HTTP Error ${error.response.status} fetching from ${source}:`, error.response.data);
+        } else {
+            console.error(`Error fetching from ${source}:`, error.message);
+        }
+        return [];
       });
     }
-    // If the source is not configured, return a resolved promise with an empty array
     console.warn(`No fetcher configured for source: ${source}`);
     return Promise.resolve([]);
   });
 
-  // Wait for all fetches to complete (or fail gracefully)
+
   const results = await Promise.allSettled(promises);
-  
-  // Flatten the arrays of jobs from all successful sources into a single array
   return results
     .filter(result => result.status === 'fulfilled')
     .flatMap(result => result.value);
