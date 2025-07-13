@@ -6,8 +6,9 @@ import 'aos/dist/aos.css';
 import AOS from 'aos';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// 1. Import BrowserRouter
-import { BrowserRouter } from 'react-router-dom';
+
+// 1. Import ONLY ONE router. HashRouter is best for GitHub Pages.
+import { HashRouter } from 'react-router-dom';
 import App from './App';
 
 // Initialize AOS
@@ -19,9 +20,9 @@ AOS.init({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {/* 2. Wrap your App component with BrowserRouter */}
-    <BrowserRouter>
+    {/* 2. Wrap your App component with the single router */}
+    <HashRouter>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );
