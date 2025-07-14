@@ -1,31 +1,40 @@
 import React from 'react';
-import '../styles/FeaturedCourses.css';
+import { Link } from 'react-router-dom';
+import '../styles/FeaturedCourses.css'; // Make sure this path is correct
 import { Laptop, PersonWorkspace, GraphUp, FileEarmarkText } from 'react-bootstrap-icons';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
-const courses = [
-  {
-    title: 'Virtual Executive Assistant',
-    icon: <PersonWorkspace size={36} />,
-    description: 'Master scheduling, communication, and high-level executive support for global founders.',
-  },
-  {
-    title: 'Virtual CFO (vCFO)',
-    icon: <GraphUp size={36} />,
-    description: 'Learn financial planning, budgeting, and reporting for startups and SMEs.',
-  },
-  {
-    title: 'Compliance & Legal Assistant',
-    icon: <FileEarmarkText size={36} />,
-    description: 'Support businesses with filings, contracts, and corporate compliance from anywhere.',
-  },
-  {
-    title: 'Digital Business Assistant',
-    icon: <Laptop size={36} />,
-    description: 'Provide remote admin support, CRM updates, customer emails, and data handling.',
-  },
+// --- IMPROVEMENT: Import the single source of truth for course data ---
+import COURSES from '../data/courses';
+
+// --- NEW: Define which courses to feature by their ID ---
+// This makes it easy to change the featured courses later.
+const featuredCourseIds = [
+  'virtual-executive-assistant',
+  'virtual-cfo',
+  'compliance-legal-assistant',
+  'digital-business-assistant',
 ];
 
+// --- NEW: Create a mapping from course ID to a specific icon ---
+const iconMap = {
+  'virtual-executive-assistant': <PersonWorkspace size={36} />,
+  'virtual-cfo': <GraphUp size={36} />,
+  'compliance-legal-assistant': <FileEarmarkText size={36} />,
+  'digital-business-assistant': <Laptop size={36} />,
+};
+
 const FeaturedCourses = () => {
+  // Initialize AOS for animations
+  React.useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
+  // --- IMPROVEMENT: Dynamically filter the main COURSES array ---
+  // This gets the full, up-to-date course objects for the ones we want to feature.
+  const featuredCourses = COURSES.filter(course => featuredCourseIds.includes(course.id));
+
   return (
     <section className="courses-section py-5 bg-light" id="featured-courses">
       <div className="container text-center">
@@ -35,15 +44,25 @@ const FeaturedCourses = () => {
         </p>
 
         <div className="row">
-          {courses.map((course, index) => (
-            <div className="col-md-6 col-lg-3 mb-4" key={index} data-aos="fade-up" data-aos-delay={index * 100}>
-              <div className="course-card h-100 shadow-sm p-4 bg-white">
-                <div className="course-icon mb-3 text-primary">{course.icon}</div>
-                <h5 className="course-title">{course.title}</h5>
-                <p className="course-description">{course.description}</p>
-              </div>
+          {featuredCourses.map((course, index) => (
+            <div className="col-md-6 col-lg-3 mb-4" key={course.id} data-aos="fade-up" data-aos-delay={index * 100}>
+              {/* Wrap the entire card in a Link to make it clickable */}
+              <Link to={`/courses/${course.id}`} className="course-card-link text-decoration-none">
+                <div className="course-card h-100 shadow-sm p-4 bg-white">
+                  {/* Get the icon from our new iconMap */}
+                  <div className="course-icon mb-3 text-primary">{iconMap[course.id]}</div>
+                  {/* Use the title and description from the centralized data */}
+                  <h5 className="course-title">{course.title}</h5>
+                  <p className="course-description">{course.description}</p>
+                </div>
+              </Link>
             </div>
           ))}
+        </div>
+        <div className="text-center mt-4" data-aos="fade-up">
+            <Link to="/courses" className="btn btn-primary btn-lg">
+                Explore All Courses
+            </Link>
         </div>
       </div>
     </section>

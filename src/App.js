@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { CurrencyProvider } from "./context/CurrencyContext";
-import CallToAction from './components/CallToAction';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -18,6 +17,7 @@ import Events from './pages/Events';
 import EventDetail from './pages/EventDetail';
 import BlogList from './pages/BlogList';
 import BlogDetail from './pages/BlogDetail';
+import BecomeATrainer from './pages/BecomeATrainer';
 
 // Your Google Analytics Measurement ID
 const GA_MEASUREMENT_ID = "G-NGZ7CF0TNG";
@@ -56,9 +56,9 @@ function App() {
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/blog" element={<BlogList />} />
             <Route path="/blog/:id" element={<BlogDetail />} />
+            <Route path="/become-a-trainer" element={<BecomeATrainer />} />
             {/* Add more routes as needed */}
           </Routes>
-          <CallToAction/>
           <Footer />
         </div>
       </CurrencyProvider>

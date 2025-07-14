@@ -52,7 +52,7 @@ const SearchForm = ({
     onFilterChange({ selectedSources: newSources });
   };
 
-  const JOB_SOURCES = ['Adzuna', 'FindWork', 'Jooble', 'Reed'];
+  const JOB_SOURCES = ['Adzuna', 'FindWork', 'Jooble', 'Reed', 'The Muse'];
   return (
     <form onSubmit={onSearch} className="mb-5 p-4 border rounded shadow-sm bg-light">
       {/* --- Row 0: Job Boards --- */}

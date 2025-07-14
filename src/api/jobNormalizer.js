@@ -158,6 +158,29 @@ export const normalizeJob = (job, source, options = {}) => {
         };
 
       // TODO: Add cases for "The Muse" and "FindWork" here later.
+      case "The Muse":
+        // The Muse has a unique structure
+        return {
+          id: job.id,
+          title: job.name,
+          company: job.company.name,
+          // Location is an array, take the first one
+          location: job.locations.length > 0 ? job.locations[0].name : "N/A",
+          // Description is HTML content
+          description: job.contents.replace(/<[^>]+>/g, ""), // Strip HTML for snippet
+          url: job.refs.landing_page,
+          source: "The Muse",
+          postedDate: new Date(job.publication_date),
+          // Category is an array, take the first one
+          category:
+            job.categories.length > 0 ? job.categories[0].name : "General",
+          // Other fields are not directly available in the same format
+          salaryMin: null,
+          salaryMax: null,
+          currency: "USD",
+          contractType: null,
+          contractTime: null,
+        };
 
       default:
         // If the source is unknown, log a warning and return null.

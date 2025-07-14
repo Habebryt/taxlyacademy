@@ -8,7 +8,7 @@ const ADZUNA_APP_ID = process.env.REACT_APP_ADZUNA_APP_ID;
 const ADZUNA_APP_KEY = process.env.REACT_APP_ADZUNA_APP_KEY;
 const JOOBLE_API_KEY = process.env.REACT_APP_JOOBLE_API_KEY;
 const REED_API_KEY = process.env.REACT_APP_REED_API_KEY;
-// const MUSE_API_KEY = process.env.REACT_APP_MUSE_API_KEY;
+const MUSE_API_KEY = process.env.REACT_APP_MUSE_API_KEY;
 const FINDWORK_API_KEY = process.env.REACT_APP_FINDWORK_API_KEY;
 
 
@@ -130,12 +130,37 @@ const fetchFromReed = async (filters) => {
   return data.results.map(job => normalizeJob(job, "Reed")).filter(Boolean);
 };
 
+const fetchFromMuse = async (filters) => {
+  const { keywords, location, page } = filters;
+  const API_URL = "https://www.themuse.com/api/public/jobs";
+
+  const params = {
+    api_key: MUSE_API_KEY,
+    page: page,
+    // The Muse API uses 'location' and a general text query parameter
+    location: location,
+    // The Muse doesn't have a direct keyword search, but we can filter by category or level if needed.
+    // For now, we'll rely on location and manual filtering of results.
+  };
+
+  const { data } = await axios.get(API_URL, { params });
+  
+  // Manually filter results by keywords since the API doesn't have a 'q' or 'what' param
+  const filteredResults = data.results.filter(job => 
+    job.name.toLowerCase().includes(keywords.toLowerCase()) || 
+    job.contents.toLowerCase().includes(keywords.toLowerCase())
+  );
+
+  return filteredResults.map(job => normalizeJob(job, "The Muse")).filter(Boolean);
+};
+
 
 const API_FETCHER_CONFIG = {
   Adzuna: fetchFromAdzuna,
   FindWork: fetchFromFindWork,
   Jooble: fetchFromJooble,
   Reed: fetchFromReed,
+  "The Muse": fetchFromMuse,
 };
 
 /**

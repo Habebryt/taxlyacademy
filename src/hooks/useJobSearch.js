@@ -11,7 +11,7 @@ export const useJobSearch = () => {
 
   const [filters, setFilters] = useState({
     // A new filter to control which APIs are called
-    selectedSources: ["Adzuna", "FindWork", "Jooble", "Reed"],
+    selectedSources: ["Adzuna", "FindWork", "Jooble", "Reed", "The Muse"],
     // Common filters
     keywords: "remote virtual assistant",
     location: "",
