@@ -57,8 +57,7 @@ const FeaturedJobs = () => {
     };
     getFeaturedJobs();
 
-    // --- NEW: Set up an interval to auto-update the jobs ---
-    // This will re-fetch the jobs every 10 minutes (600,000 milliseconds).
+
     const intervalId = setInterval(getFeaturedJobs, 600000);
 
     return () => clearInterval(intervalId);

@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/CallToAction.css'; // Ensure this path is correct for your project
+import '../styles/CallToAction.css';
 import { RocketTakeoff, Mortarboard } from 'react-bootstrap-icons';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 const CallToAction = () => {
-  // Initialize AOS for animations
   React.useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);

@@ -1,102 +1,133 @@
-// src/components/common/JobDetailModal.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-// --- Helper Functions for consistent data formatting ---
+// --- FIX: Use a default import and correct the path ---
+import COURSES from '../../data/courses'; 
+// --- FIX: Correct the path to the geminiService file ---
+import { getCourseRecommendationsForJob } from '../../api/geminiService';
 
-/**
- * A helper function to format salary data into a readable string.
- * @param {object} job - The normalized job object.
- * @returns {string|null} The formatted salary string or null if no data.
- */
-const formatSalary = (job) => {
-  if (!job.salaryMin) {
-    return null;
-  }
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: job.currency || 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-  let salaryText = formatter.format(job.salaryMin);
-  if (job.salaryMax && job.salaryMax > job.salaryMin) {
-    salaryText += ` - ${formatter.format(job.salaryMax)}`;
-  }
-  return `${salaryText} a year`;
-};
+import { Stars } from 'react-bootstrap-icons';
 
-/**
- * A helper function to capitalize the first letter and replace underscores.
- * @param {string} s - The string to format.
- * @returns {string} The formatted string.
- */
-const capitalize = (s) => {
-  if (typeof s !== 'string') return '';
-  return s.charAt(0).toUpperCase() + s.slice(1).replace('_', ' ');
-};
-
-/**
- * Displays the full details of a selected job in a scrollable pop-up modal.
- * @param {object} props - The component props.
- * @param {object} props.job - The selected job object to display.
- * @param {function} props.onClose - The function to close the modal.
- */
 const JobDetailModal = ({ job, onClose }) => {
-  // Don't render anything if no job is selected
-  if (!job) {
-    return null;
-  }
+  const [recommendations, setRecommendations] = useState([]);
+  const [isLoadingRecs, setIsLoadingRecs] = useState(false);
+  const [hasRequestedRecs, setHasRequestedRecs] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Pre-format the data for cleaner JSX
-  const salaryString = formatSalary(job);
-  const contractInfo = [
-    job.contractType ? capitalize(job.contractType) : '',
-    job.contractTime ? capitalize(job.contractTime) : ''
-  ].filter(Boolean).join(' / ');
+  useEffect(() => {
+    if (job) {
+      setRecommendations([]);
+      setIsLoadingRecs(false);
+      setHasRequestedRecs(false);
+      setError(null);
+    }
+  }, [job]);
+
+  if (!job) return null;
+
+  const handleGetRecommendations = async () => {
+    setIsLoadingRecs(true);
+    setHasRequestedRecs(true);
+    setError(null);
+    
+    try {
+      const courseIds = await getCourseRecommendationsForJob(job);
+      
+      if (courseIds && courseIds.length > 0) {
+        const recommendedCourses = courseIds
+          .map(id => COURSES.find(c => c.id === id))
+          .filter(Boolean);
+        setRecommendations(recommendedCourses);
+      } else {
+        setRecommendations([]);
+      }
+    } catch (err) {
+      console.error("Error fetching recommendations:", err);
+      setError("Sorry, we couldn't get recommendations at this time. Please try again.");
+      setRecommendations([]);
+    } finally {
+      setIsLoadingRecs(false);
+    }
+  };
+
+  const renderRecommendationState = () => {
+    if (!hasRequestedRecs) {
+      return (
+        <button className="btn btn-info" onClick={handleGetRecommendations}>
+          <Stars className="me-2" /> Get AI Course Recommendations
+        </button>
+      );
+    }
+    if (isLoadingRecs) {
+      return (
+        <div className="d-flex align-items-center text-muted">
+          <div className="spinner-border spinner-border-sm me-2" role="status"></div>
+          <span>Analyzing job for course recommendations...</span>
+        </div>
+      );
+    }
+    if (error) {
+        return (
+            <div className="text-center">
+                <p className="text-danger mb-2">{error}</p>
+                <button className="btn btn-sm btn-outline-secondary" onClick={handleGetRecommendations}>
+                    Try Again
+                </button>
+            </div>
+        );
+    }
+    if (recommendations.length > 0) {
+      return (
+        <div className="d-flex flex-wrap gap-2">
+          {recommendations.map(course => (
+            <Link
+              key={course.id}
+              to={`/courses/${course.id}`}
+              className="btn btn-outline-success btn-sm"
+              onClick={onClose}
+            >
+              {course.title}
+            </Link>
+          ))}
+        </div>
+      );
+    }
+    // --- IMPROVEMENT: Display a more helpful message when no recommendations are found ---
+    return (
+        <div>
+            <p className="text-muted small mb-1">Our AI couldn't find a strong course match for this specific job.</p>
+            <p className="text-muted small mb-0">This can happen with highly specialized or vaguely described roles.</p>
+        </div>
+    );
+  };
 
   return (
-    // The `modal-dialog-scrollable` class from Bootstrap makes the modal body scrollable
     <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1">
       <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content">
           <div className="modal-header">
-            {/* Grouped Title, Company, and Location */}
-            <div>
-              <h5 className="modal-title fw-bold mb-1">{job.title}</h5>
-              <p className="text-muted mb-0">{job.company} &middot; {job.location}</p>
-            </div>
-            <button type="button" className="btn-close" onClick={onClose} aria-label="Close"></button>
+             {/* Modal Header Content */}
+             <div>
+                <h5 className="modal-title fw-bold mb-1">{job.title}</h5>
+                <p className="text-muted mb-0">{job.company} &middot; {job.location}</p>
+             </div>
+             <button type="button" className="btn-close" onClick={onClose} aria-label="Close"></button>
           </div>
           <div className="modal-body">
-            {/* --- Job Details Badges --- */}
-            <div className="d-flex flex-wrap gap-2 mb-4">
-              {salaryString && (
-                <span className="badge bg-success-subtle text-success-emphasis rounded-pill fs-6 px-3 py-2">
-                  {salaryString}
-                </span>
-              )}
-              {contractInfo && (
-                <span className="badge bg-primary-subtle text-primary-emphasis rounded-pill fs-6 px-3 py-2">
-                  {contractInfo}
-                </span>
-              )}
-              {job.category && (
-                <span className="badge bg-secondary-subtle text-secondary-emphasis rounded-pill fs-6 px-3 py-2">
-                  {job.category}
-                </span>
-              )}
+            <div className="mb-4 p-3 bg-light border rounded">
+              <h6 className="fw-bold">AI-Powered Course Recommendations</h6>
+              <p className="text-muted small mt-n1 mb-3">Let our AI analyze this job and suggest relevant courses from our catalog.</p>
+              {renderRecommendationState()}
             </div>
-
-            {/* --- Full Job Description --- */}
             <h6 className="fw-bold">Job Description</h6>
             <div dangerouslySetInnerHTML={{ __html: job.description?.replace(/\n/g, "<br />") }} />
           </div>
-          <div className="modal-footer justify-content-between">
+           <div className="modal-footer justify-content-between">
             <button type="button" className="btn btn-secondary" onClick={onClose}>
               Close
             </button>
             <a href={job.url} className="btn btn-primary fw-bold" target="_blank" rel="noopener noreferrer">
-              View and Apply on {job.source}
+              Apply on {job.source}
             </a>
           </div>
         </div>

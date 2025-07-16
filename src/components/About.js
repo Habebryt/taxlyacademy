@@ -1,41 +1,64 @@
-import React from 'react';
-import '../styles/About.css';
-import heroImage from '../assets/hero-image.jpg'; // replace with actual image
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import '../styles/About.css'; // You can reuse the same stylesheet or create a new one
 
+// Import icons for a more visual and engaging layout
+import { Bullseye, People, Puzzle } from 'react-bootstrap-icons';
 
+const AboutSummary = () => {
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
 
-
-
-const About = () => {
   return (
-    <section className="about-section py-5">
+    <section className="about-summary-section py-5">
       <div className="container">
-        <h1 className="section-title text-center mb-4" data-aos="fade-down">
-          About Taxly Academy
-        </h1>
         <div className="row align-items-center">
-          <div className="col-md-6" data-aos="fade-right">
-            
-            <img src={heroImage} alt="Hero" className="img-fluid hero-image rounded shadow" loading="lazy" />
+          {/* Image Column */}
+          <div className="col-lg-6" data-aos="fade-right">
+            <img
+              src="/images/freelance-tax.jpg" // Suggestion: Use a picture of students collaborating or a trainer teaching
+              alt="A snapshot of the Taxly Academy community"
+              className="img-fluid rounded shadow-lg"
+              loading="lazy"
+            />
           </div>
-          <div className="col-md-6" data-aos="fade-left">
-            <h3>Our Mission</h3>
-            <p>
-              At Taxly Academy, our mission is to empower Africans with in-demand virtual skills that open doors to remote work opportunities worldwide. We believe in practical, accessible training that prepares learners for real jobs in virtual assistance, finance, compliance, marketing, and more.
+          {/* Content Column */}
+          <div className="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+            <h2 className="display-5 fw-bold mb-3">Empowering Africa's Virtual Workforce</h2>
+            <p className="text-muted fs-5 mb-4">
+              We are on a mission to bridge the gap between talented African professionals and global remote work opportunities.
             </p>
+            
+            <div className="d-flex align-items-start mb-3">
+              <Bullseye size={24} className="text-primary me-3 flex-shrink-0 mt-1" />
+              <div>
+                <h5 className="fw-bold mb-1">Practical, Job-Ready Skills</h5>
+                <p className="text-muted mb-0">Our courses are designed around the real-world skills employers are looking for right now.</p>
+              </div>
+            </div>
 
-            <h3>Our Vision</h3>
-            <p>
-              We envision a future where every African can access quality virtual skills education to thrive in the global digital economy — without geographical or financial barriers.
-            </p>
+            <div className="d-flex align-items-start mb-3">
+              <People size={24} className="text-primary me-3 flex-shrink-0 mt-1" />
+              <div>
+                <h5 className="fw-bold mb-1">Built for African Talent</h5>
+                <p className="text-muted mb-0">We provide tailored support and mentorship to help you succeed in the global digital economy.</p>
+              </div>
+            </div>
+            
+            <div className="d-flex align-items-start mb-4">
+              <Puzzle size={24} className="text-primary me-3 flex-shrink-0 mt-1" />
+              <div>
+                <h5 className="fw-bold mb-1">Free Access to Learning</h5>
+                <p className="text-muted mb-0">Enroll in any course for free and only pay for a certificate when you're ready.</p>
+              </div>
+            </div>
 
-            <h3>Why Choose Taxly Academy?</h3>
-            <ul>
-              <li>Hands-on, industry-relevant courses tailored for African learners.</li>
-              <li>Flexible learning: self-paced with expert support.</li>
-              <li>Certification that enhances your resume and credibility.</li>
-              <li>Connection to real remote job opportunities.</li>
-            </ul>
+            <Link to="/about" className="btn btn-outline-primary mt-3">
+              Learn More About Our Story
+            </Link>
           </div>
         </div>
       </div>
@@ -43,4 +66,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default AboutSummary;

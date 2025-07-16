@@ -98,9 +98,9 @@ const About = () => {
         <div className="container">
             <div className="row align-items-center">
                 <div className="col-lg-4 text-center" data-aos="fade-right">
-                    <img src="/images/founder-profile.jpg" alt="Founder of Taxly Academy" className="img-fluid rounded-circle shadow mb-3" style={{width: '250px', height: '250px', objectFit: 'cover'}} />
-                    <h4 className="fw-bold">Founder's Name</h4>
-                    <p className="text-muted">CEO & Founder, Taxly Academy</p>
+                    <img src="/images/lagos.jpg" alt="Founder of Taxly Academy" className="img-fluid rounded-circle shadow mb-3" style={{width: '250px', height: '250px', objectFit: 'cover'}} />
+                    <h4 className="fw-bold">Igiekpemi Habeeb</h4>
+                    <p className="text-muted">Founder, Taxly Academy</p>
                 </div>
                 <div className="col-lg-8" data-aos="fade-left" data-aos-delay="200">
                     <h2 className="fw-bold">A Message From Our Founder</h2>

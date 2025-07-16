@@ -126,7 +126,7 @@ const Contact = () => {
                     <Whatsapp size={24} className="text-primary me-3 flex-shrink-0 mt-1" />
                     <div>
                       <h6 className="fw-bold mb-0">Phone / WhatsApp</h6>
-                      <a href="tel:+2349123456789" className="text-muted text-decoration-none">+234 912 345 6789</a>
+                      <a href="tel:+2349123456789" className="text-muted text-decoration-none">+234 70-5215-2979</a>
                     </div>
                   </li>
                 </ul>

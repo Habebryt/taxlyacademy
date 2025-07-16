@@ -1,0 +1,35 @@
+/* src/styles/TopBar.css */
+
+.top-bar {
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+  background-color: #212529; /* A dark background */
+}
+
+.top-bar-link {
+  color: #adb5bd; /* A light grey color for the text */
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+}
+
+.top-bar-link:hover {
+  color: #ffffff; /* White on hover */
+}
+
+/* Ensure the main navbar is positioned correctly below the new top bar */
+.navbar.fixed-top {
+  top: 40px; /* Adjust this value based on the final height of your top-bar */
+}
+
+/* On smaller screens, remove the top offset for the main navbar when it's not fixed */
+@media (max-width: 991.98px) {
+  .navbar.fixed-top {
+    top: 0;
+  }
+  /* Hide the top bar on mobile if it becomes too crowded, or adjust as needed */
+  .top-bar {
+    display: none;
+  }
+}

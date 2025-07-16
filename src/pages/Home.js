@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 // Assuming you will create a specific CSS file for homepage styles
-import "../styles/Home.css"; 
+import "../styles/Home.css";
 
 // Import all the building-block components for the homepage
 import Hero from "../components/Hero";
@@ -17,6 +17,7 @@ import Partners from "../components/Partners";
 import LatestJobs from "../components/LatestJobs";
 import FAQ from "../components/FAQ";
 import CallToAction from "../components/CallToAction";
+import UpcomingEventsHome from "../components/UpcomingEventsHome";
 
 /**
  * The main Home page component.
@@ -25,9 +26,9 @@ import CallToAction from "../components/CallToAction";
 const Home = () => {
   // Initialize the AOS (Animate On Scroll) library when the component mounts
   useEffect(() => {
-    AOS.init({ 
-        duration: 1000, // Animation duration
-        once: true,     // Whether animation should happen only once - while scrolling down
+    AOS.init({
+      duration: 1000, // Animation duration
+      once: true, // Whether animation should happen only once - while scrolling down
     });
   }, []);
 
@@ -45,7 +46,7 @@ const Home = () => {
           content="Africa’s #1 platform for virtual and remote professional training. Start your journey today."
         />
       </Helmet>
-      
+
       {/* The homepage is built by stacking various components in a specific order.
         Each component represents a different section of the page.
       */}
@@ -57,6 +58,9 @@ const Home = () => {
       <Testimonials />
       <Partners />
       <LatestJobs />
+      <UpcomingEventsHome />
+
+      {/* FAQ and Call to Action sections are typically placed at the bottom of the homepage */}
       <FAQ />
       <CallToAction />
     </>

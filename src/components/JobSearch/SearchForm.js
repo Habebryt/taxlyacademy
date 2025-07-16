@@ -1,8 +1,4 @@
-// src/components/JobSearch/SearchForm.js
 import React from "react";
-
-// In a real project, you would import this from a constants file:
-// import { COUNTRIES } from '../../constants/countries';
 const COUNTRIES = [
   { name: "United Kingdom", code: "gb", currency: "GBP" },
   { name: "United States", code: "us", currency: "USD" },
@@ -16,14 +12,13 @@ const COUNTRIES = [
 ];
 
 /**
- * A comprehensive search form with filters tailored for the Adzuna API.
- * @param {object} props - The component props.
- * @param {object} props.filters - The current state of all search filters.
- * @param {function} props.onFilterChange - A function to update the filter state in the parent hook.
- * @param {function} props.onSearch - The function to trigger a new job search.
- * @param {boolean} props.loading - Indicates if a search is currently in progress.
- * @param {Array} props.categories - The list of categories fetched dynamically for the selected country.
- * @param {boolean} props.loadingCategories - Indicates if the categories are currently being fetched.
+ * @param {object} props 
+ * @param {object} props.filters 
+ * @param {function} props.onFilterChange 
+ * @param {function} props.onSearch 
+ * @param {boolean} props.loading 
+ * @param {Array} props.categories
+ * @param {boolean} props.loadingCategories
  */
 const SearchForm = ({
   filters,
@@ -33,21 +28,15 @@ const SearchForm = ({
   categories,
   loadingCategories,
 }) => {
-  // A single handler for all input and select changes.
-  // It calls the onFilterChange prop with an object like { [inputName]: inputValue }.
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    // Handle both regular inputs and checkboxes
     const newValue = type === "checkbox" ? checked : value;
     onFilterChange({ [name]: newValue });
   };
-
-  // Handler for the source checkboxes
   const handleSourceChange = (source) => {
     const newSources = filters.selectedSources.includes(source)
       ? filters.selectedSources.filter((s) => s !== source)
-      : // Add the source if it's not already there
+      : 
         [...filters.selectedSources, source];
     onFilterChange({ selectedSources: newSources });
   };
