@@ -1,4 +1,4 @@
-import { ShieldCheck, PersonCircle, CardList, Share, Lock, Pen, Envelope } from 'react-bootstrap-icons';
+import { ShieldCheck, PersonCircle, CardList, Share, Lock, Pen } from 'react-bootstrap-icons';
 
 export const policySections = [
     {

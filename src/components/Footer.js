@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Footer.css';
-import { db, auth, appId } from '../firebase';
+import { db, auth} from '../firebase';
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { Facebook, Twitter, Instagram, Linkedin, Send, CheckCircleFill } from 'react-bootstrap-icons';
 

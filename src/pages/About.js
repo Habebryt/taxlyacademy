@@ -6,7 +6,7 @@ import "aos/dist/aos.css";
 import "../styles/About.css"; 
 import Hero from "../components/Hero";
 
-import { Binoculars, Bullseye, People, Puzzle } from 'react-bootstrap-icons';
+import {Bullseye, People, Puzzle } from 'react-bootstrap-icons';
 
 const About = () => {
   useEffect(() => {

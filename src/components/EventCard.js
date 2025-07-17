@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, GeoAlt, Tag } from 'react-bootstrap-icons';
+import { Calendar, GeoAlt} from 'react-bootstrap-icons';
 import '../styles/EventCard.css';
 
 const EventCard = ({ event, isPast = false }) => {

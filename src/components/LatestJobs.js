@@ -62,7 +62,7 @@ const FeaturedJobs = () => {
 
     return () => clearInterval(intervalId);
     
-  }, []);
+  },);
 
   const sliderSettings = {
     dots: true,

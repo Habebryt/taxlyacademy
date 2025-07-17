@@ -7,10 +7,10 @@ import Hero from "../components/Hero";
 import { useFirebase } from '../context/FirebaseContext';
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import StatusModal from '../components/common/StatusModal';
-import { Telephone, Envelope, Whatsapp, GeoAlt } from 'react-bootstrap-icons';
+import {Envelope, Whatsapp, GeoAlt } from 'react-bootstrap-icons';
 
 const Contact = () => {
-  const { db, auth, appId, authStatus } = useFirebase();
+  const { db, auth, authStatus } = useFirebase();
   
   const [formData, setFormData] = useState({
     fullName: '',

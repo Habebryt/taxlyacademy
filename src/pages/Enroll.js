@@ -109,7 +109,7 @@ const FreeEnrollmentModal = ({
 };
 
 const Enroll = () => {
-  const { db, auth, appId, authStatus } = useFirebase();
+  const { db, auth, authStatus } = useFirebase();
   const [selectedCourseId, setSelectedCourseId] = useState("");
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

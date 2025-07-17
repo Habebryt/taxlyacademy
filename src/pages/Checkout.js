@@ -5,14 +5,12 @@ import "aos/dist/aos.css";
 import "../styles/Checkout.css";
 import { CurrencyContext } from "../context/CurrencyContext";
 import StatusModal from '../components/common/StatusModal';
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
-import { db, auth, appId } from "../firebase";
+import {useSearchParams, useNavigate } from "react-router-dom";
+import { db, auth} from "../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useFirebase } from "../context/FirebaseContext";
 import COURSES from "../data/courses";
 import {
-  CheckCircleFill,
-  XCircleFill,
   InfoCircleFill,
 } from "react-bootstrap-icons";
 const bankAccounts = {

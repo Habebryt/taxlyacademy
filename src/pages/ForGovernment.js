@@ -11,7 +11,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import StatusModal from "../components/common/StatusModal"; 
 
 const ForGovernment = () => {
-  const { db, auth, appId, authStatus } = useFirebase();
+  const { db, auth, authStatus } = useFirebase();
 
   const [formData, setFormData] = useState({
     agencyName: "",

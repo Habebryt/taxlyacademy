@@ -6,7 +6,7 @@ import '../styles/UpcomingEventsHome.css';
 
 import EVENTS from '../data/events';
 
-import { Calendar, GeoAlt, ArrowRightCircle } from 'react-bootstrap-icons';
+import {GeoAlt, ArrowRightCircle } from 'react-bootstrap-icons';
 
 const UpcomingEventsHome = () => {
   useEffect(() => {

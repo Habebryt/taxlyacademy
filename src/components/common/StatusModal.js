@@ -1,7 +1,6 @@
 import {
   CheckCircleFill,
-  XCircleFill,
-  InfoCircleFill,
+  XCircleFill
 } from "react-bootstrap-icons";
 
 export const StatusModal = ({ status, title, message, onClose }) => (

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { CurrencyContext } from "../context/CurrencyContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/Courses.css";
 import Hero from "../components/Hero";
 import COURSES from "../data/courses";
@@ -11,7 +11,6 @@ const Courses = () => {
   const [sortBy, setSortBy] = useState("none");
   const [layoutView, setLayoutView] = useState("grid-3");
   const { symbol, rate, code } = useContext(CurrencyContext);
-  const navigate = useNavigate();
 
   const calculateCertFee = (priceNgn) => {
     if (!rate) return "...";

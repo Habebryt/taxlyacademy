@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { CurrencyContext } from "../context/CurrencyContext";
 import { useParams, Link, useNavigate } from "react-router-dom";
@@ -140,7 +140,7 @@ const CourseDetail = () => {
   const course = Array.isArray(COURSES)
     ? COURSES.find((c) => c.id === id)
     : null;
-  const { db, auth, appId, authStatus } = useFirebase();
+  const { db, auth, authStatus } = useFirebase();
 
   const { symbol, rate } = useContext(CurrencyContext);
   const navigate = useNavigate();

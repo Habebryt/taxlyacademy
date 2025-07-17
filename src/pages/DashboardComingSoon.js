@@ -53,7 +53,7 @@ const CountdownTimer = () => {
 };
 
 const DashboardComingSoon = () => {
-  const { db, auth, appId, authStatus } = useFirebase();
+  const { db, auth, authStatus } = useFirebase();
   const [formData, setFormData] = useState({ fullName: "", email: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalContent, setModalContent] = useState(null);
