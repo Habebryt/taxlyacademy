@@ -8,7 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 // 1. Import ONLY ONE router. HashRouter is best for GitHub Pages.
-import { HashRouter } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import App from './App';
 
 // Initialize AOS
@@ -21,8 +21,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     {/* 2. Wrap your App component with the single router */}
-    <HashRouter>
+    <Router>
       <App />
-    </HashRouter>
+    </Router>
   </React.StrictMode>
 );

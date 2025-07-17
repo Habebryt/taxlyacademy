@@ -1,0 +1,107 @@
+/* src/styles/Dashboard.css */
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa; /* A light, neutral background */
+}
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-right: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1030;
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.sidebar-nav {
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.sidebar-heading {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #6c757d;
+  padding: 0 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  color: #495057;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background-color: #e9ecef;
+  color: #0d6efd;
+}
+
+.sidebar-link.active {
+  background-color: #0d6efd;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.logout-link:hover {
+    color: #dc3545; /* Red for logout on hover */
+}
+
+.dashboard-main-content {
+  flex-grow: 1;
+  margin-left: 260px; /* Same as sidebar width */
+  padding: 2rem;
+}
+
+.welcome-header {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 2rem;
+}
+
+.dashboard-page-content {
+  /* This is where the specific page content will go */
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 991.98px) {
+  .sidebar {
+    /* On mobile, you might want to hide the sidebar by default and show it with a toggle button */
+    /* For simplicity here, we'll just make it take up the full width when the layout breaks */
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #dee2e6;
+  }
+  .dashboard-layout {
+    flex-direction: column;
+  }
+  .dashboard-main-content {
+    margin-left: 0;
+  }
+}

@@ -1,6 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- =================================================================== -->
+    <!-- >> 1. META BASICS & SEO << -->
+    <!-- =================================================================== -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#007bff" />
+    
+    <!-- This is the main title that appears in the browser tab -->
+    <title>Taxly Academy | Virtual Skills for Global Careers</title>
+    
+    <!-- This is the main description for search engines like Google -->
+    <meta
+      name="description"
+      content="Taxly Academy trains Africans in virtual skills for global careers in finance, business, and remote operations. Enroll for free and get job-ready."
+    />
+    <meta
+      name="keywords"
+      content="Taxly Academy, virtual jobs, remote work, finance, business support, African professionals, training, academy, back-office, remote skills, freelancing"
+    />
+    <meta name="author" content="Taxly Africa" />
+    <link rel="canonical" href="https://academy.taxlyafrica.com/" />
+
+    <!-- =================================================================== -->
+    <!-- >> 2. FAVICONS & MANIFEST << -->
+    <!-- =================================================================== -->
+    <!-- These icons appear in browser tabs, bookmarks, and on mobile home screens -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- =================================================================== -->
+    <!-- >> 3. SOCIAL MEDIA & SHARING (OPEN GRAPH / TWITTER) << -->
+    <!-- =================================================================== -->
+    <!-- These tags control how your site looks when shared on social media -->
+    
+    <!-- Open Graph (for Facebook, WhatsApp, LinkedIn, etc.) -->
+    <meta property="og:title" content="Taxly Academy | Virtual Skills for Global Careers" />
+    <meta property="og:description" content="Train for remote global roles in finance, compliance, and admin support. Enroll for free and get job-ready." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://academy.taxlyafrica.com/" />
+    <meta property="og:site_name" content="Taxly Academy" />
+    <!-- IMPORTANT: Replace with the full, absolute URL to your main sharing image. 1200x630px is recommended. -->
+    <meta property="og:image" content="https://academy.taxlyafrica.com/cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Taxly Academy | Virtual Skills for Global Careers" />
+    <meta name="twitter:description" content="Train for remote global roles in finance, compliance, and admin support. Enroll for free and get job-ready." />
+    <!-- IMPORTANT: Replace with the full, absolute URL to your main sharing image. -->
+    <meta name="twitter:image" content="https://academy.taxlyafrica.com/cover.jpg" />
+
+
+    <!-- =================================================================== -->
+    <!-- >> 4. FONTS & ANALYTICS << -->
+    <!-- =================================================================== -->
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Google Tag Manager -->
     <script>
       (function (w, d, s, l, i) {
@@ -16,105 +82,36 @@
     </script>
     <!-- End Google Tag Manager -->
 
-    <!-- Meta Basics -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>Taxly Academy</title>
-    <meta
-      name="description"
-      content="Taxly Academy trains Africans in virtual skills for global careers in finance, business, and remote operations."
-    />
-    <meta
-      name="keywords"
-      content="Taxly Academy, virtual jobs, remote work, finance, business support, African professionals, training, academy, back-office, remote skills, freelancing"
-    />
-    <meta name="author" content="Taxly Africa" />
-    <link rel="canonical" href="https://academy.taxlyafrica.com/" />
-    <meta name="theme-color" content="#007bff" />
-
-    <!-- Favicon & Manifest -->
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
-    <!-- Open Graph / Social Meta -->
-    <meta property="og:title" content="Taxly Academy" />
-    <meta
-      property="og:description"
-      content="Train for remote global roles in finance, compliance, and admin support."
-    />
-    <meta property="og:image" content="%PUBLIC_URL%/cover.jpg" />
-    <meta property="og:url" content="https://academy.taxlyafrica.com/" />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-
-    <!-- Performance Optimizations -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="preload"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      as="style"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-
     <!-- Google Analytics (GA4 via gtag.js) -->
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-NGZ7CF0TNG"
-    ></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NGZ7CF0TNG"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-NGZ7CF0TNG");
     </script>
 
-    <!-- Structured Data (Schema.org JSON-LD) -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Taxly Academy",
-        "url": "https://academy.taxlyafrica.com",
-        "logo": "https://academy.taxlyafrica.com/logo192.png",
-        "sameAs": [
-          "https://twitter.com/taxlyafrica",
-          "https://linkedin.com/company/taxlyafrica"
-        ]
-      }
-    </script>
   </head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
 
-    <!-- Paystack Script (Payment) -->
-    <script defer src="https://js.paystack.co/v1/inline.js"></script>
-
     <!-- Google Tag Manager (noscript) -->
-    <noscript
-      ><iframe
+    <noscript>
+      <iframe
         src="https://www.googletagmanager.com/ns.html?id=GTM-TQS32L6P"
         height="0"
         width="0"
         style="display: none; visibility: hidden"
-      ></iframe
-    ></noscript>
+      ></iframe>
+    </noscript>
     <!-- End Google Tag Manager (noscript) -->
-    <script>
-      window.__initial_auth_token = "some-firebase-token";
-    </script>
+
+    <!-- NOTE: The custom token script has been removed as it's not needed for production. -->
+    <!-- Any other third-party scripts can be added here. -->
+
   </body>
 </html>

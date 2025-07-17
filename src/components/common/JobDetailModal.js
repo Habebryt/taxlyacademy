@@ -3,15 +3,18 @@ import { Link } from "react-router-dom";
 import COURSES from "../../data/courses";
 import { getCourseRecommendationsForJob } from "../../api/geminiService";
 
-import { Openai } from "react-bootstrap-icons";
+// Import new icons for the buttons
+import {Check, Stars } from "react-bootstrap-icons";
 
-const JobDetailModal = ({ job, onClose }) => {
+// --- UPDATED: The modal now accepts an `onTrackJob` prop ---
+const JobDetailModal = ({ job, onClose, onTrackJob }) => {
   const [recommendations, setRecommendations] = useState([]);
   const [isLoadingRecs, setIsLoadingRecs] = useState(false);
   const [hasRequestedRecs, setHasRequestedRecs] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Reset the state whenever a new job is selected
     if (job) {
       setRecommendations([]);
       setIsLoadingRecs(false);
@@ -53,7 +56,7 @@ const JobDetailModal = ({ job, onClose }) => {
     if (!hasRequestedRecs) {
       return (
         <button className="btn btn-info" onClick={handleGetRecommendations}>
-          <Openai className="me-2" /> Get Course Recommendations
+          <Stars className="me-2" /> Get AI Course Recommendations
         </button>
       );
     }
@@ -100,7 +103,7 @@ const JobDetailModal = ({ job, onClose }) => {
     return (
       <div>
         <p className="text-muted small mb-1">
-          Our System couldn't find a strong course match for this specific job.
+          Our AI couldn't find a strong course match for this specific job.
         </p>
         <p className="text-muted small mb-0">
           This can happen with highly specialized or vaguely described roles.
@@ -114,7 +117,6 @@ const JobDetailModal = ({ job, onClose }) => {
       <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content">
           <div className="modal-header">
-            {/* Modal Header Content */}
             <div>
               <h5 className="modal-title fw-bold mb-1">{job.title}</h5>
               <p className="text-muted mb-0">
@@ -130,9 +132,9 @@ const JobDetailModal = ({ job, onClose }) => {
           </div>
           <div className="modal-body">
             <div className="mb-4 p-3 bg-light border rounded">
-              <h6 className="fw-bold">Course Recommendations</h6>
+              <h6 className="fw-bold">AI Course Recommendations</h6>
               <p className="text-muted small mt-n1 mb-3">
-                Let our System analyze this job and suggest relevant courses from
+                Let our AI analyze this job and suggest relevant courses from
                 our catalog.
               </p>
               {renderRecommendationState()}
@@ -145,21 +147,32 @@ const JobDetailModal = ({ job, onClose }) => {
             />
           </div>
           <div className="modal-footer justify-content-between">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onClose}
+            {/* --- NEW: "Track Application" button --- */}
+            <button 
+              type="button" 
+              className="btn btn-outline-info d-flex align-items-center"
+              // This calls the function passed down from JobListPage
+              onClick={() => onTrackJob(job)}
             >
-              Close
+              <Check className="me-2" /> I've Applied - Track Job
             </button>
-            <a
-              href={job.url}
-              className="btn btn-primary fw-bold"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Apply on {job.source}
-            </a>
+            <div>
+              <button
+                type="button"
+                className="btn btn-secondary me-2"
+                onClick={onClose}
+              >
+                Close
+              </button>
+              <a
+                href={job.url}
+                className="btn btn-primary fw-bold"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Apply on {job.source}
+              </a>
+            </div>
           </div>
         </div>
       </div>
