@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
+import DashboardComingSoon from "./pages/DashboardComingSoon";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Enroll from "./pages/Enroll";
@@ -73,6 +74,7 @@ function App() {
               <Route path="/for-businesses" element={<ForBusinesses />} />
               <Route path="/for-schools" element={<ForSchools />} />
               <Route path="/for-government" element={<ForGovernment />} />
+              <Route path="/login" element={<DashboardComingSoon/>}></Route>
               {/* Add more routes as needed */}
             </Routes>
             <Footer />
