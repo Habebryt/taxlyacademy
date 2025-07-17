@@ -3,8 +3,6 @@ import { Link, NavLink } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../styles/Navbar.css';
-
-// Icons
 import { PersonPlus, Person, Briefcase, Bank, Building, Mortarboard } from 'react-bootstrap-icons';
 
 const Navbar = () => {

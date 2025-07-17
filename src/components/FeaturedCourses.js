@@ -1,23 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/FeaturedCourses.css'; // Make sure this path is correct
+import '../styles/FeaturedCourses.css'; 
 import { Laptop, PersonWorkspace, GraphUp, FileEarmarkText } from 'react-bootstrap-icons';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-
-// --- IMPROVEMENT: Import the single source of truth for course data ---
 import COURSES from '../data/courses';
-
-// --- NEW: Define which courses to feature by their ID ---
-// This makes it easy to change the featured courses later.
 const featuredCourseIds = [
   'virtual-executive-assistant',
   'virtual-cfo',
   'compliance-legal-assistant',
   'digital-business-assistant',
 ];
-
-// --- NEW: Create a mapping from course ID to a specific icon ---
 const iconMap = {
   'virtual-executive-assistant': <PersonWorkspace size={36} />,
   'virtual-cfo': <GraphUp size={36} />,
@@ -26,13 +19,9 @@ const iconMap = {
 };
 
 const FeaturedCourses = () => {
-  // Initialize AOS for animations
   React.useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
-
-  // --- IMPROVEMENT: Dynamically filter the main COURSES array ---
-  // This gets the full, up-to-date course objects for the ones we want to feature.
   const featuredCourses = COURSES.filter(course => featuredCourseIds.includes(course.id));
 
   return (

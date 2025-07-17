@@ -4,16 +4,10 @@ import { CurrencyContext } from "../context/CurrencyContext";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import "../styles/CourseDetail.css";
 import Hero from "../components/Hero";
-
-// --- NEW: Import Firebase services and data ---
 import { useFirebase } from "../context/FirebaseContext";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import COURSES from "../data/courses";
-
-// --- NEW: Import icons for modals ---
 import { CheckCircleFill, XCircleFill } from "react-bootstrap-icons";
-
-// --- Reusable Modals (can be moved to a separate components file later) ---
 const StatusModal = ({ status, title, message, onClose }) => (
   <div
     className="modal fade show"
@@ -146,29 +140,19 @@ const CourseDetail = () => {
   const course = Array.isArray(COURSES)
     ? COURSES.find((c) => c.id === id)
     : null;
-
-  // --- NEW: Get Firebase services from context ---
   const { db, auth, appId, authStatus } = useFirebase();
 
   const { symbol, rate } = useContext(CurrencyContext);
   const navigate = useNavigate();
-
-  // State for modals and submission process
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-
-  // Navigate to checkout for paid certificate enrollment
   const handlePaidEnroll = () => {
     navigate(`/checkout?course=${id}`);
   };
-
-  // Open the modal for free enrollment
   const handleFreeEnrollClick = () => {
     setIsEnrollModalOpen(true);
   };
-
-  // --- UPDATED: Handle the submission of the free enrollment form ---
   const handleFreeEnrollSubmit = async (formData) => {
     if (authStatus !== "success" || !db || !auth.currentUser) {
       setModalContent({
@@ -183,15 +167,6 @@ const CourseDetail = () => {
     try {
       const userId = auth.currentUser.uid;
       const enrollmentsCollectionRef = collection(db, "freeEnrollments");
-
-      console.log("Saving to collection: freeEnrollments");
-      console.log("With data:", {
-        userId,
-        courseId: course.Id,
-        courseTitle: course.title,
-        fullName: formData.fullName,
-        email: formData.email,
-      });
 
       await addDoc(enrollmentsCollectionRef, {
         userId,
@@ -209,7 +184,6 @@ const CourseDetail = () => {
         message: `You're in! Check your email for access details to the ${course.title} course.`,
       });
     } catch (error) {
-      console.error("Error writing document to Firestore: ", error);
       setModalContent({
         status: "error",
         title: "Enrollment Failed",
@@ -223,7 +197,6 @@ const CourseDetail = () => {
 
   const handleCloseStatusModal = () => {
     setModalContent(null);
-    // No redirection needed here, user is already on the correct page.
   };
 
   if (!course) {

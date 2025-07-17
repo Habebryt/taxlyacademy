@@ -1,4 +1,31 @@
-import React from "react";
+const JobSourceLogo = ({ source }) => {
+  // Define a mapping of source names to their visual properties
+  const sourceStyles = {
+    Adzuna: { backgroundColor: "#7b1fa2", color: "white", name: "Adzuna" },
+    Reed: { backgroundColor: "#003366", color: "white", name: "Reed.co.uk" },
+    Jooble: { backgroundColor: "#2a9d8f", color: "white", name: "Jooble" },
+    FindWork: { backgroundColor: "#e76f51", color: "white", name: "FindWork" },
+    "The Muse": {
+      backgroundColor: "#f4a261",
+      color: "white",
+      name: "The Muse",
+    },
+    Default: { backgroundColor: "#6c757d", color: "white", name: source },
+  };
+
+  const style = sourceStyles[source] || sourceStyles.Default;
+
+  const logoStyle = {
+    padding: "0.2rem 0.6rem",
+    borderRadius: "0.25rem",
+    fontSize: "0.75rem",
+    fontWeight: "bold",
+    backgroundColor: style.backgroundColor,
+    color: style.color,
+  };
+
+  return <span style={logoStyle}>{style.name}</span>;
+};
 
 /**
  * @param {Date} date
@@ -63,7 +90,6 @@ const capitalize = (s) => {
 const JobCard = ({ job, onSelectJob, columnClass }) => {
   const salaryString = formatSalary(job);
   const postedString = timeAgo(job.postedDate);
-
   const contractInfo = [
     job.contractType ? capitalize(job.contractType) : "",
     job.contractTime ? capitalize(job.contractTime) : "",
@@ -77,7 +103,7 @@ const JobCard = ({ job, onSelectJob, columnClass }) => {
         <div className="card-body d-flex flex-column">
           {/* Category Badge */}
           {job.category && (
-            <p className="text-muted small mb-1">{job.category}</p>
+            <p className="text-muted small mb-1">{job.category} by <JobSourceLogo source={job.source} /></p>
           )}
 
           {/* Job Title */}

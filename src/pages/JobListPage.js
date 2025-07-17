@@ -1,24 +1,53 @@
-// src/pages/JobListPage.js
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useJobSearch } from "../hooks/useJobSearch";
-
-// Import all the UI components
-import Hero from "../components/Hero"; // Assuming this already exists
+import '../styles/JobList.css';
 import SearchForm from "../components/JobSearch/SearchForm";
-import LayoutSwitcher from "../components/JobSearch/LayoutSwitcher";
 import JobCard from "../components/JobListings/JobCard";
-import JobTableRow from "../components/JobListings/JobTableRow";
 import JobDetailModal from "../components/common/JobDetailModal";
 import Pagination from "../components/common/Pagination";
+import { Funnel, ExclamationCircle, Briefcase } from 'react-bootstrap-icons';
+const SkeletonLoader = () => (
+    Array.from({ length: 6 }).map((_, index) => (
+        <div className="col-12 col-lg-6" key={index}>
+            <div className="skeleton-card">
+                <div className="d-flex align-items-center mb-3">
+                    <div className="skeleton-avatar"></div>
+                    <div style={{ flex: 1 }}>
+                        <div className="skeleton-line" style={{ width: '70%', height: '1.2rem' }}></div>
+                        <div className="skeleton-line skeleton-line-short" style={{ height: '0.8rem' }}></div>
+                    </div>
+                </div>
+                <div className="skeleton-line skeleton-line-long"></div>
+                <div className="skeleton-line"></div>
+                <div className="skeleton-line skeleton-line-short"></div>
+            </div>
+        </div>
+    ))
+);
+const NoResults = () => (
+    <div className="col-12">
+        <div className="no-results-container">
+            <Briefcase size={50} className="text-muted mb-3" />
+            <h4 className="fw-bold">No Jobs Found</h4>
+            <p className="text-muted">We couldn't find any jobs matching your current filters. Try broadening your search!</p>
+        </div>
+    </div>
+);
+const ErrorDisplay = ({ message }) => (
+     <div className="col-12">
+        <div className="alert alert-danger d-flex align-items-center">
+            <ExclamationCircle size={24} className="me-3" />
+            <div>
+                <h5 className="alert-heading">An Error Occurred</h5>
+                {message}
+            </div>
+        </div>
+    </div>
+);
 
-/**
- * The main page component that assembles the entire job search interface.
- * It uses the `useJobSearch` hook to manage all application state and logic,
- * and passes that state down to the presentational UI components.
- */
+
 const JobListPage = () => {
-  // The custom hook provides all the state and logic needed for the page.
   const {
     jobs,
     loading,
@@ -29,118 +58,88 @@ const JobListPage = () => {
     currentPage,
     handlePageChange,
     hasMorePages,
-    categories, // New state for Adzuna categories
-    loadingCategories, // New state to track if categories are loading
+    categories, 
+    loadingCategories,
   } = useJobSearch();
 
-  // Local UI state for this page component
-  const [layoutView, setLayoutView] = useState('grid-2');
   const [selectedJob, setSelectedJob] = useState(null);
-
-  /**
-   * Determines the correct Bootstrap column class based on the selected layout view.
-   * @returns {string} The Bootstrap column class (e.g., 'col-lg-3 col-md-4').
-   */
-  const getColumnClass = () => {
-    switch (layoutView) {
-      case 'grid-4': return 'col-lg-3 col-md-4 col-sm-6';
-      case 'grid-3': return 'col-md-4 col-sm-6';
-      default: return 'col-md-6';
-    }
-  };
 
   return (
     <>
       <Helmet>
         <title>Job Board | Find Your Next Opportunity</title>
         <meta name="description" content="Search thousands of jobs from around the world with our powerful job search engine." />
-        <meta property="og:title" content="Job Board | Powered by Adzuna" />
-        <meta property="og:description" content="Use our powerful filters to find your next role by country, category, salary, and more." />
       </Helmet>
 
-      <Hero
-        backgroundImage="/images/jobs-banner.jpg" // Example image
-        title="Find Your Next Opportunity"
-        subtitle="Our job board is now powered by a more precise search experience."
-        ctaText={null}
-      />
+      {/* --- Main Page Container with a modern background color --- */}
+      <div className="job-list-page-wrapper">
+        <div className="container-fluid px-4 py-5">
+          <div className="row">
 
-      <div className="job-list-section py-5">
-        <div className="container">
-          <h2 className="text-center mb-4">Search For Jobs</h2>
+            {/* --- Left Column: Filters (Sticky) --- */}
+            <div className="col-lg-4 col-xl-3">
+              <aside className="filters-sidebar">
+                <h4 className="fw-bold mb-4 d-flex align-items-center">
+                    <Funnel className="me-2" /> Filters
+                </h4>
+                <SearchForm 
+                  filters={filters}
+                  onFilterChange={handleFilterChange}
+                  onSearch={handleSearch}
+                  loading={loading}
+                  categories={categories}
+                  loadingCategories={loadingCategories}
+                />
+              </aside>
+            </div>
 
-          {/* The SearchForm now receives the new category-related props */}
-          <SearchForm 
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onSearch={handleSearch}
-            loading={loading}
-            categories={categories}
-            loadingCategories={loadingCategories}
-          />
-          
-          <LayoutSwitcher currentView={layoutView} onViewChange={setLayoutView} />
+            {/* --- Right Column: Job Results --- */}
+            <main className="col-lg-8 col-xl-9 job-results-column">
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 className="fw-bold mb-0">Job Listings</h2>
+                    <p className="text-muted mb-0">
+                        {loading ? 'Searching for the best opportunities...' : `${jobs.length} jobs found.`}
+                    </p>
+                </div>
+              </div>
 
-          {/* --- Display Logic for Loading, Errors, and No Results --- */}
-          {loading && <p className="text-center mt-5">Loading job listings...</p>}
-          {error && <p className="alert alert-danger text-center mt-5">{error}</p>}
-          {!loading && !error && jobs.length === 0 && (
-            <p className="text-center mt-5">No job listings found. Try adjusting your filters.</p>
-          )}
-
-          {/* --- Conditional Rendering for Job Listings (Grid or Table) --- */}
-          {!loading && !error && jobs.length > 0 && (
-            layoutView.startsWith('grid') ? (
               <div className="row">
-                {jobs.map(job => (
-                  <JobCard 
-                    key={job.id} // Use job.id as it's unique from the API
-                    job={job} 
-                    onSelectJob={setSelectedJob} 
-                    columnClass={getColumnClass()} 
-                  />
-                ))}
+                {loading ? (
+                  <SkeletonLoader />
+                ) : error ? (
+                  <ErrorDisplay message={error} />
+                ) : jobs.length === 0 ? (
+                  <NoResults />
+                ) : (
+                  jobs.map(job => (
+                    <div className="col-12 col-xl-6" key={`${job.source}-${job.id}`}>
+                         <JobCard 
+                           job={job} 
+                           onSelectJob={() => setSelectedJob(job)} 
+                         />
+                    </div>
+                  ))
+                )}
               </div>
-            ) : (
-              <div className="table-responsive">
-                <table className="table table-striped table-hover align-middle">
-                  <thead>
-                    <tr>
-                      <th>Job Title / Company</th>
-                      <th>Location</th>
-                      <th>Salary</th>
-                      <th>Contract</th>
-                      <th>Posted</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {jobs.map(job => (
-                      <JobTableRow 
-                        key={job.id} // Use job.id as it's unique
-                        job={job} 
-                        onSelectJob={setSelectedJob} 
-                      />
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )
-          )}
 
-          {/* --- Pagination Controls --- */}
-          {!loading && !error && jobs.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-              loading={loading}
-              hasMorePages={hasMorePages}
-            />
-          )}
+              {/* --- Pagination --- */}
+              {!loading && !error && jobs.length > 0 && (
+                <div className="mt-4 d-flex justify-content-center">
+                    <Pagination
+                      currentPage={currentPage}
+                      onPageChange={handlePageChange}
+                      loading={loading}
+                      hasMorePages={hasMorePages}
+                    />
+                </div>
+              )}
+            </main>
+          </div>
         </div>
       </div>
       
-      {/* --- Render Modal and Backdrop --- */}
+      {/* --- Modal remains the same --- */}
       <JobDetailModal job={selectedJob} onClose={() => setSelectedJob(null)} />
       {selectedJob && <div className="modal-backdrop fade show"></div>}
     </>

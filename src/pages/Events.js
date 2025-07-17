@@ -5,22 +5,16 @@ import EventCard from "../components/EventCard";
 import "../styles/Events.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
-// Import the single source of truth for event data
 import EVENTS from '../data/events';
 
 const Events = () => {
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
-
-  // Dynamically separate events into upcoming and past based on the current date
   const { upcomingEvents, pastEvents } = useMemo(() => {
     const now = new Date();
     const upcoming = [];
     const past = [];
-
-    // Sort all events by date, newest first
     const sortedEvents = [...EVENTS].sort((a, b) => new Date(b.date) - new Date(a.date));
 
     sortedEvents.forEach(event => {
@@ -30,7 +24,6 @@ const Events = () => {
         past.push(event);
       }
     });
-    // Reverse upcoming events to show the nearest one first
     return { upcomingEvents: upcoming.reverse(), pastEvents: past };
   }, []);
 

@@ -3,10 +3,9 @@ import { Helmet } from "react-helmet-async";
 import { Link } from 'react-router-dom';
 import AOS from "aos";
 import "aos/dist/aos.css";
-import "../styles/About.css"; // Ensure this path is correct for your project
+import "../styles/About.css"; 
 import Hero from "../components/Hero";
 
-// Import some new icons for a more dynamic feel
 import { Binoculars, Bullseye, People, Puzzle } from 'react-bootstrap-icons';
 
 const About = () => {
@@ -30,7 +29,7 @@ const About = () => {
       </Helmet>
 
       <Hero
-        backgroundImage="/images/about-banner.jpg" // Make sure you have this image
+        backgroundImage="/images/about-banner.jpg" 
         title="Our Story"
         subtitle="Empowering African Talent for the Global Digital Economy"
       />
@@ -50,7 +49,7 @@ const About = () => {
             </div>
             <div className="col-lg-6" data-aos="fade-left" data-aos-delay="200">
               <img
-                src="/images/ourmission.png" // Ensure you have this image
+                src="/images/ourmission.png"
                 alt="A team collaborating on a project"
                 className="img-fluid rounded shadow-lg"
                 loading="lazy"
@@ -98,7 +97,7 @@ const About = () => {
         <div className="container">
             <div className="row align-items-center">
                 <div className="col-lg-4 text-center" data-aos="fade-right">
-                    <img src="/images/lagos.jpg" alt="Founder of Taxly Academy" className="img-fluid rounded-circle shadow mb-3" style={{width: '250px', height: '250px', objectFit: 'cover'}} />
+                    <img src="/images/1752706282_img_0.webp" alt="Founder of Taxly Academy" className="img-fluid rounded-circle shadow mb-3" style={{width: '250px', height: '250px', objectFit: 'cover'}} />
                     <h4 className="fw-bold">Igiekpemi Habeeb</h4>
                     <p className="text-muted">Founder, Taxly Academy</p>
                 </div>

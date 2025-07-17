@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import "../styles/Contact.css"; // Ensure this path is correct for your project
+import "../styles/Contact.css"; 
 import Hero from "../components/Hero";
-
-// Import icons for a more visual layout
+import { useFirebase } from '../context/FirebaseContext';
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import StatusModal from '../components/common/StatusModal';
 import { Telephone, Envelope, Whatsapp, GeoAlt } from 'react-bootstrap-icons';
 
 const Contact = () => {
-  // --- State Management for the contact form ---
+  const { db, auth, appId, authStatus } = useFirebase();
+  
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -17,33 +19,60 @@ const Contact = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
+  const [modalContent, setModalContent] = useState(null);
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
-
-  // --- Handlers for the form ---
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (authStatus !== 'success' || !db || !auth.currentUser) {
+      setModalContent({
+        status: 'error',
+        title: 'Submission Failed',
+        message: 'Could not connect to our services. Please refresh the page and try again.'
+      });
+      return;
+    }
+
     setIsSubmitting(true);
-    setSubmitMessage('');
 
-    // --- Simulate form submission ---
-    // In a real application, you would send this data to a backend service
-    // like EmailJS, Formspree, or your own API endpoint.
-    console.log("Form data submitted:", formData);
+    try {
+      const userId = auth.currentUser.uid;
+      const submissionsCollectionRef = collection(db, `contactUsSubmissions`);
 
-    setTimeout(() => {
+      await addDoc(submissionsCollectionRef, {
+        userId,
+        ...formData,
+        submittedAt: serverTimestamp()
+      });
+      setModalContent({
+        status: 'success',
+        title: 'Message Sent!',
+        message: 'Thank you for reaching out. Our team will get back to you shortly.'
+      });
+      setFormData({ fullName: '', email: '', subject: '', message: '' });
+
+    } catch (error) {
+      setModalContent({
+        status: 'error',
+        title: 'Submission Failed',
+        message: 'There was an error sending your message. Please try again.'
+      });
+    } finally {
       setIsSubmitting(false);
-      setSubmitMessage('Thank you for your message! We will get back to you shortly.');
-      setFormData({ fullName: '', email: '', subject: '', message: '' }); // Clear form
-    }, 1500);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setModalContent(null);
   };
 
   return (
@@ -62,7 +91,7 @@ const Contact = () => {
       </Helmet>
 
       <Hero
-        backgroundImage="/images/contact-banner.jpg" // Ensure you have this image
+        backgroundImage="/images/contact-banner.jpg"
         title="We'd Love to Hear From You"
         subtitle="Whether you have a question about our courses, partnerships, or anything else, our team is ready to answer all your questions."
       />
@@ -78,25 +107,29 @@ const Contact = () => {
                   <div className="row">
                     <div className="col-md-6 mb-3">
                       <label htmlFor="fullName" className="form-label">Full Name</label>
-                      <input type="text" className="form-control" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Your full name" required />
+                      <input type="text" className="form-control" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Your full name" required disabled={isSubmitting} />
                     </div>
                     <div className="col-md-6 mb-3">
                       <label htmlFor="email" className="form-label">Email Address</label>
-                      <input type="email" className="form-control" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="you@example.com" required />
+                      <input type="email" className="form-control" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="you@example.com" required disabled={isSubmitting} />
                     </div>
                   </div>
                   <div className="mb-3">
                     <label htmlFor="subject" className="form-label">Subject</label>
-                    <input type="text" className="form-control" id="subject" name="subject" value={formData.subject} onChange={handleChange} placeholder="e.g., Course Inquiry" required />
+                    <input type="text" className="form-control" id="subject" name="subject" value={formData.subject} onChange={handleChange} placeholder="e.g., Course Inquiry" required disabled={isSubmitting} />
                   </div>
                   <div className="mb-3">
                     <label htmlFor="message" className="form-label">Message</label>
-                    <textarea className="form-control" id="message" name="message" rows="5" value={formData.message} onChange={handleChange} placeholder="Your message..." required></textarea>
+                    <textarea className="form-control" id="message" name="message" rows="5" value={formData.message} onChange={handleChange} placeholder="Your message..." required disabled={isSubmitting}></textarea>
                   </div>
-                  <button type="submit" className="btn btn-primary btn-lg w-100" disabled={isSubmitting}>
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                  <button type="submit" className="btn btn-primary btn-lg w-100" disabled={isSubmitting || authStatus !== 'success'}>
+                    {isSubmitting ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Sending...
+                        </>
+                    ) : authStatus === 'pending' ? 'Connecting...' : 'Send Message'}
                   </button>
-                  {submitMessage && <div className="alert alert-success mt-3">{submitMessage}</div>}
                 </form>
               </div>
             </div>
@@ -119,14 +152,14 @@ const Contact = () => {
                     <Envelope size={24} className="text-primary me-3 flex-shrink-0 mt-1" />
                     <div>
                       <h6 className="fw-bold mb-0">General Inquiries</h6>
-                      <a href="mailto:support@taxlyacademy.com" className="text-muted text-decoration-none">support@academy.taxlyafrica.com</a>
+                      <a href="mailto:academy@taxlyafrica.com" className="text-muted text-decoration-none">academy@taxlyafrica.com</a>
                     </div>
                   </li>
                   <li className="d-flex align-items-start mb-3">
                     <Whatsapp size={24} className="text-primary me-3 flex-shrink-0 mt-1" />
                     <div>
                       <h6 className="fw-bold mb-0">Phone / WhatsApp</h6>
-                      <a href="tel:+2349123456789" className="text-muted text-decoration-none">+234 70-5215-2979</a>
+                      <a href="tel:+2347052152979" className="text-muted text-decoration-none">+234 705 215 2979</a>
                     </div>
                   </li>
                 </ul>
@@ -149,6 +182,19 @@ const Contact = () => {
           </div>
         </div>
       </section>
+
+      {/* --- NEW: Conditionally render the status modal --- */}
+      {modalContent && (
+        <>
+          <StatusModal 
+            status={modalContent.status}
+            title={modalContent.title}
+            message={modalContent.message}
+            onClose={handleCloseModal}
+          />
+          <div className="modal-backdrop fade show"></div>
+        </>
+      )}
     </>
   );
 };

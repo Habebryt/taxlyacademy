@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import '../styles/About.css'; // You can reuse the same stylesheet or create a new one
+import '../styles/About.css'; 
 
-// Import icons for a more visual and engaging layout
+
 import { Bullseye, People, Puzzle } from 'react-bootstrap-icons';
 
 const AboutSummary = () => {
@@ -19,7 +19,7 @@ const AboutSummary = () => {
           {/* Image Column */}
           <div className="col-lg-6" data-aos="fade-right">
             <img
-              src="/images/freelance-tax.jpg" // Suggestion: Use a picture of students collaborating or a trainer teaching
+              src="/images/freelance-tax.jpg" 
               alt="A snapshot of the Taxly Academy community"
               className="img-fluid rounded shadow-lg"
               loading="lazy"

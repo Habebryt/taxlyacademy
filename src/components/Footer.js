@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/Footer.css'; // Ensure this path is correct for your project
-
-// --- NEW: Import Firebase services ---
-import { db, auth, appId } from '../firebase'; // Assuming firebase.js is in src/
+import '../styles/Footer.css';
+import { db, auth, appId } from '../firebase';
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-
-// Import icons for a more visual and consistent look
 import { Facebook, Twitter, Instagram, Linkedin, Send, CheckCircleFill } from 'react-bootstrap-icons';
 
-// --- NEW: Reusable Success Modal for the newsletter ---
+
 const NewsletterSuccessModal = ({ onClose }) => (
     <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">
@@ -32,7 +28,6 @@ const Footer = () => {
     const [email, setEmail] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState('');
-    // --- NEW: State to control the success modal ---
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const handleNewsletterSubmit = async (e) => {
@@ -48,7 +43,7 @@ const Footer = () => {
 
         try {
             const userId = auth.currentUser ? auth.currentUser.uid : 'anonymous_subscriber';
-            const newsletterCollectionRef = collection(db, `artifacts/${appId}/public/data/newsletterSubscriptions`);
+            const newsletterCollectionRef = collection(db, `newsletterSubscriptions`);
 
             await addDoc(newsletterCollectionRef, {
                 email: email,
@@ -56,12 +51,12 @@ const Footer = () => {
                 subscribedAt: serverTimestamp()
             });
 
-            console.log("Newsletter subscription saved successfully.");
-            setEmail(''); // Clear the input on success
-            setShowSuccessModal(true); // --- NEW: Show the success modal ---
+        
+            setEmail(''); 
+            setShowSuccessModal(true); 
 
         } catch (error) {
-            console.error("Error saving newsletter subscription:", error);
+            
             setSubmitMessage('Could not subscribe at this time. Please try again.');
         } finally {
             setIsSubmitting(false);

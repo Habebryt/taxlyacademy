@@ -5,7 +5,7 @@ const steps = [
   {
     title: "Browse Courses",
     description: "Explore our curated virtual courses designed for remote work and back-office support.",
-    icon: "bi bi-search", // Bootstrap icons
+    icon: "bi bi-search",
   },
   {
     title: "Enroll & Learn",

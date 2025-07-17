@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Partners.css'; // We will create the styles for the marquee here
+import '../styles/Partners.css';
 
 const partners = [
   '/images/adzuna_logo.svg',
@@ -7,6 +7,7 @@ const partners = [
   '/images/jooble-logo.png',
   '/images/the-muse-logo.png',
   '/images/jobicy-official.svg',
+  '/images/WhatJobs Logo Vector.svg .png',
   '/images/DevIT.A.png',
   '/images/remote.co-logo.png',
   '/images/remoteok-logo.jpg',

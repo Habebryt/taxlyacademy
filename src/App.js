@@ -14,7 +14,6 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Enroll from "./pages/Enroll";
 import Checkout from "./pages/Checkout";
-import JobList from "./pages/JobList";
 import JobListPage from "./pages/JobListPage";
 import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
@@ -61,7 +60,6 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/enroll" element={<Enroll />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/joblist" element={<JobList />} />
               <Route path="/joblistpage" element={<JobListPage />} />
               {/* Add more routes as needed */}
               <Route path="/events" element={<Events />} />

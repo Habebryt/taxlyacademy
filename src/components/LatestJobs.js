@@ -62,7 +62,7 @@ const FeaturedJobs = () => {
 
     return () => clearInterval(intervalId);
     
-  }, []); // The empty dependency array ensures this setup runs only once.
+  }, []);
 
   const sliderSettings = {
     dots: true,

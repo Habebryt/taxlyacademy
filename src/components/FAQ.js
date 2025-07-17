@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/FAQ.css'; // Ensure this path is correct for your project
+import '../styles/FAQ.css';
 import { Plus, Dash } from 'react-bootstrap-icons';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -34,8 +34,6 @@ const faqs = [
 
 const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState(null);
-
-  // Initialize AOS for animations
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);

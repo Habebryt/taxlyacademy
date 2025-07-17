@@ -4,8 +4,6 @@ import { CurrencyContext } from "../context/CurrencyContext";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Courses.css";
 import Hero from "../components/Hero";
-
-// Import the single source of truth for course data
 import COURSES from "../data/courses";
 
 const Courses = () => {
@@ -15,10 +13,8 @@ const Courses = () => {
   const { symbol, rate, code } = useContext(CurrencyContext);
   const navigate = useNavigate();
 
-  // This function now calculates the certificate fee.
   const calculateCertFee = (priceNgn) => {
     if (!rate) return "...";
-    // Calculate the certificate fee by dividing the original price by 10
     const fee = (priceNgn / 10) * rate;
     return fee.toLocaleString(undefined, {
       minimumFractionDigits: 2,
@@ -34,20 +30,25 @@ const Courses = () => {
 
     if (searchTerm) {
       const lowercasedFilter = searchTerm.toLowerCase();
-      courses = courses.filter(course =>
-        (course.title && course.title.toLowerCase().includes(lowercasedFilter)) ||
-        (course.description && course.description.toLowerCase().includes(lowercasedFilter)) ||
-        (Array.isArray(course.keywords) && course.keywords.some(k => k.toLowerCase().includes(lowercasedFilter)))
+      courses = courses.filter(
+        (course) =>
+          (course.title &&
+            course.title.toLowerCase().includes(lowercasedFilter)) ||
+          (course.description &&
+            course.description.toLowerCase().includes(lowercasedFilter)) ||
+          (Array.isArray(course.keywords) &&
+            course.keywords.some((k) =>
+              k.toLowerCase().includes(lowercasedFilter)
+            ))
       );
     }
 
     courses.sort((a, b) => {
-      // Sorting by "price" now correctly sorts by the certificate fee.
       switch (sortBy) {
         case "price-asc":
-          return (a.price / 10) - (b.price / 10);
+          return a.price / 10 - b.price / 10;
         case "price-desc":
-          return (b.price / 10) - (a.price / 10);
+          return b.price / 10 - a.price / 10;
         case "duration-asc":
           return parseInt(a.duration) - parseInt(b.duration);
         case "duration-desc":
@@ -66,7 +67,10 @@ const Courses = () => {
     <>
       <Helmet>
         <title>Courses | Taxly Academy</title>
-        <meta name="description" content="Enroll in our online courses for free. Optional certificates available. Learn skills for virtual assistants, compliance officers, remote CFOs, and more."/>
+        <meta
+          name="description"
+          content="Enroll in our online courses for free. Optional certificates available. Learn skills for virtual assistants, compliance officers, remote CFOs, and more."
+        />
       </Helmet>
 
       <Hero
@@ -79,7 +83,7 @@ const Courses = () => {
         <div className="container">
           <div className="row mb-4 align-items-center">
             <div className="col-md-4">
-              <input 
+              <input
                 type="text"
                 className="form-control"
                 placeholder="Search courses..."
@@ -95,7 +99,9 @@ const Courses = () => {
               >
                 <option value="none">Sort By</option>
                 <option value="price-asc">Certificate Fee (Low to High)</option>
-                <option value="price-desc">Certificate Fee (High to Low)</option>
+                <option value="price-desc">
+                  Certificate Fee (High to Low)
+                </option>
                 <option value="duration-asc">Duration (Shortest First)</option>
                 <option value="duration-desc">Duration (Longest First)</option>
                 <option value="title-asc">Alphabetical (A-Z)</option>
@@ -131,7 +137,7 @@ const Courses = () => {
               </span>
             </div>
           </div>
-          
+
           {layoutView === "grid-3" && (
             <div className="row">
               {filteredCourses.map((course, idx) => (
@@ -154,7 +160,8 @@ const Courses = () => {
                             Free to Enroll
                           </span>
                           <span className="badge bg-primary-subtle text-primary-emphasis fs-6">
-                            Cert. Fee: {symbol}{calculateCertFee(course.price)}
+                            Cert. Fee: {symbol}
+                            {calculateCertFee(course.price)}
                           </span>
                         </div>
                         <Link
@@ -204,7 +211,8 @@ const Courses = () => {
                         </span>
                       </td>
                       <td>
-                        {symbol}{calculateCertFee(course.price)}
+                        {symbol}
+                        {calculateCertFee(course.price)}
                       </td>
                       <td>
                         <Link

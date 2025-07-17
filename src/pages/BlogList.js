@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import "../styles/BlogList.css"; // Assuming you have a CSS file for styles
-import Hero from "../components/Hero"; // Assuming you have a Hero component for the banner
+import "../styles/BlogList.css"; 
+import Hero from "../components/Hero"; 
 
 const BlogList = () => {
   useEffect(() => {

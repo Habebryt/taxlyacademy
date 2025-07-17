@@ -1,48 +1,16 @@
-import React, { useEffect, useState, useContext } from 'react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import '../styles/Enroll.css';
-import { CurrencyContext } from '../context/CurrencyContext';
-import { useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import React, { useEffect, useState, useContext } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import "../styles/Enroll.css";
+import { CurrencyContext } from "../context/CurrencyContext";
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { useFirebase } from '../context/FirebaseContext'; // Import the new hook
-import COURSES from '../data/courses';
-import Hero from '../components/Hero';
-import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
+import { useFirebase } from "../context/FirebaseContext";
+import StatusModal from "../components/common/StatusModal";
+import COURSES from "../data/courses";
+import Hero from "../components/Hero";
 
-// The modal components can remain the same as before
-const StatusModal = ({ status, title, message, onClose }) => (
-  <div
-    className="modal fade show"
-    style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
-    tabIndex="-1"
-  >
-    <div className="modal-dialog modal-dialog-centered">
-      <div className="modal-content">
-        <div className="modal-body text-center p-4">
-          {status === "success" ? (
-            <CheckCircleFill className="text-success mb-3" size={48} />
-          ) : (
-            <XCircleFill className="text-danger mb-3" size={48} />
-          )}
-          <h5 className="modal-title mb-2">{title}</h5>
-          <p className="text-muted">{message}</p>
-          <button
-            className={`btn ${
-              status === "success" ? "btn-primary" : "btn-secondary"
-            }`}
-            onClick={onClose}
-          >
-            {status === "success" ? "Back to Course" : "Close"}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// --- UPDATED: Free Enrollment Modal with its own state management and submission state ---
 const FreeEnrollmentModal = ({
   courseTitle,
   onClose,
@@ -141,83 +109,84 @@ const FreeEnrollmentModal = ({
 };
 
 const Enroll = () => {
-  // --- NEW: Get Firebase services and status from the central context ---
   const { db, auth, appId, authStatus } = useFirebase();
-
-  const [selectedCourseId, setSelectedCourseId] = useState('');
+  const [selectedCourseId, setSelectedCourseId] = useState("");
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-  
   const { symbol, rate } = useContext(CurrencyContext);
   const navigate = useNavigate();
-
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
-  
-  // --- REMOVED: The local Firebase authentication useEffect is no longer needed here ---
-
-  const selectedCourse = COURSES.find(c => c.id === selectedCourseId);
-  const calculateCertFee = (priceNgn) => { if (!priceNgn || !rate) return "...";
+  const selectedCourse = COURSES.find((c) => c.id === selectedCourseId);
+  const calculateCertFee = (priceNgn) => {
+    if (!priceNgn || !rate) return "...";
     const fee = (priceNgn / 10) * rate;
     return fee.toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    });};
+    });
+  };
   const handleCourseSelection = (e) => setSelectedCourseId(e.target.value);
-  const handlePaidEnroll = () => {  if (selectedCourseId) {
+  const handlePaidEnroll = () => {
+    if (selectedCourseId) {
       navigate(`/checkout?course=${selectedCourseId}`);
     } else {
       alert("Please select a course first.");
-    } };
-  const handleFreeEnrollClick = () => { if (selectedCourseId) {
+    }
+  };
+  const handleFreeEnrollClick = () => {
+    if (selectedCourseId) {
       setIsEnrollModalOpen(true);
     } else {
       alert("Please select a course first.");
-    } };
+    }
+  };
 
   const handleFreeEnrollSubmit = async (formData) => {
-    // The check is now much simpler
-    if (authStatus !== 'success' || !db || !auth.currentUser) {
-      setModalContent({ status: 'error', title: 'Enrollment Failed', message: 'Could not connect to the database. Please refresh the page and try again.' });
+    if (authStatus !== "success" || !db || !auth.currentUser) {
+      setModalContent({
+        status: "error",
+        title: "Enrollment Failed",
+        message:
+          "Could not connect to the database. Please refresh the page and try again.",
+      });
       return;
     }
     setIsSubmitting(true);
     try {
       const userId = auth.currentUser.uid;
       const enrollmentsCollectionRef = collection(db, "freeEnrollments");
-
-      console.log("Saving to collection: freeEnrollments");
-      console.log("With data:", {
-        userId,
-        courseId: selectedCourse.id,
-        courseTitle: selectedCourse.title,
-        fullName: formData.fullName,
-        email: formData.email,
-      });
-
       await addDoc(enrollmentsCollectionRef, {
         userId,
         courseId: selectedCourse.id,
         courseTitle: selectedCourse.title,
         fullName: formData.fullName,
         email: formData.email,
-        enrolledAt: serverTimestamp()
+        enrolledAt: serverTimestamp(),
       });
 
       setIsEnrollModalOpen(false);
-      setModalContent({ status: 'success', title: 'Enrollment Successful!', message: `You're in! Check your email for access details to the ${selectedCourse.title} course.` });
+      setModalContent({
+        status: "success",
+        title: "Enrollment Successful!",
+        message: `You're in! Check your email for access details to the ${selectedCourse.title} course.`,
+      });
     } catch (error) {
-      console.error("Error writing document to Firestore: ", error);
-      setModalContent({ status: 'error', title: 'Enrollment Failed', message: 'There was an error submitting your enrollment. Please try again.' });
+      setModalContent({
+        status: "error",
+        title: "Enrollment Failed",
+        message:
+          "There was an error submitting your enrollment. Please try again.",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleCloseStatusModal = () => {
-    if (modalContent?.status === 'success') {
+    if (modalContent?.status === "success") {
       navigate(`/courses/${selectedCourseId}`);
     }
     setModalContent(null);
@@ -237,38 +206,78 @@ const Enroll = () => {
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-8">
-              <div className="enroll-form-wrapper p-4 p-md-5 shadow-sm rounded bg-white" data-aos="fade-up">
+              <div
+                className="enroll-form-wrapper p-4 p-md-5 shadow-sm rounded bg-white"
+                data-aos="fade-up"
+              >
                 <div className="mb-4">
-                  <label htmlFor="courseSelect" className="form-label fs-5 fw-bold">1. Select Your Course</label>
-                  <select id="courseSelect" name="selectedCourseId" className="form-select form-select-lg" value={selectedCourseId} onChange={handleCourseSelection} required>
+                  <label
+                    htmlFor="courseSelect"
+                    className="form-label fs-5 fw-bold"
+                  >
+                    1. Select Your Course
+                  </label>
+                  <select
+                    id="courseSelect"
+                    name="selectedCourseId"
+                    className="form-select form-select-lg"
+                    value={selectedCourseId}
+                    onChange={handleCourseSelection}
+                    required
+                  >
                     <option value="">Choose a course...</option>
-                    {COURSES.map(course => (
-                      <option key={course.id} value={course.id}>{course.title}</option>
+                    {COURSES.map((course) => (
+                      <option key={course.id} value={course.id}>
+                        {course.title}
+                      </option>
                     ))}
                   </select>
                 </div>
                 {selectedCourse && (
                   <div id="enrollment-options" data-aos="fade-in">
-                    <p className="fs-5 fw-bold mt-5">2. Choose Your Enrollment Option</p>
+                    <p className="fs-5 fw-bold mt-5">
+                      2. Choose Your Enrollment Option
+                    </p>
                     {/* --- NEW: Disable buttons based on global authStatus --- */}
                     <div className="row">
                       <div className="col-md-6 mb-3 mb-md-0">
                         <div className="option-card card h-100 text-center p-3">
                           <h5 className="fw-bold">Standard Enrollment</h5>
                           <p className="display-6 text-success fw-bold">Free</p>
-                          <p className="text-muted small">Full course access, community support, and hands-on projects.</p>
-                          <button className="btn btn-success mt-auto" onClick={handleFreeEnrollClick} disabled={authStatus !== 'success'}>
-                            {authStatus === 'pending' ? 'Connecting...' : 'Start for Free'}
+                          <p className="text-muted small">
+                            Full course access, community support, and hands-on
+                            projects.
+                          </p>
+                          <button
+                            className="btn btn-success mt-auto"
+                            onClick={handleFreeEnrollClick}
+                            disabled={authStatus !== "success"}
+                          >
+                            {authStatus === "pending"
+                              ? "Connecting..."
+                              : "Start for Free"}
                           </button>
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="option-card card h-100 text-center p-3">
                           <h5 className="fw-bold">Certificate Upgrade</h5>
-                          <p className="display-6 text-primary fw-bold">{symbol}{calculateCertFee(selectedCourse.price)}</p>
-                          <p className="text-muted small">Includes all standard features plus an official, shareable certificate.</p>
-                          <button className="btn btn-primary mt-auto" onClick={handlePaidEnroll} disabled={authStatus !== 'success'}>
-                            {authStatus === 'pending' ? 'Connecting...' : 'Enroll + Get Certificate'}
+                          <p className="display-6 text-primary fw-bold">
+                            {symbol}
+                            {calculateCertFee(selectedCourse.price)}
+                          </p>
+                          <p className="text-muted small">
+                            Includes all standard features plus an official,
+                            shareable certificate.
+                          </p>
+                          <button
+                            className="btn btn-primary mt-auto"
+                            onClick={handlePaidEnroll}
+                            disabled={authStatus !== "success"}
+                          >
+                            {authStatus === "pending"
+                              ? "Connecting..."
+                              : "Enroll + Get Certificate"}
                           </button>
                         </div>
                       </div>
@@ -281,9 +290,9 @@ const Enroll = () => {
         </div>
       </section>
       {/* ... Modals JSX remains the same ... */}
-       {isEnrollModalOpen && selectedCourse && (
+      {isEnrollModalOpen && selectedCourse && (
         <>
-          <FreeEnrollmentModal 
+          <FreeEnrollmentModal
             courseTitle={selectedCourse.title}
             onClose={() => setIsEnrollModalOpen(false)}
             onSubmit={handleFreeEnrollSubmit}
@@ -295,13 +304,13 @@ const Enroll = () => {
 
       {modalContent && (
         <>
-          <StatusModal 
+          <StatusModal
             status={modalContent.status}
             title={modalContent.title}
             message={modalContent.message}
             onClose={handleCloseStatusModal}
           />
-           <div className="modal-backdrop fade show"></div>
+          <div className="modal-backdrop fade show"></div>
         </>
       )}
     </>
