@@ -17,7 +17,7 @@ const Sidebar = () => {
   // --- This is a placeholder for demonstration ---
   // In a real application, you would get the user's role from your authentication context.
   // You can change this value to 'trainer', 'support', or 'corporate' to see the menu change.
-  const userRole = 'corporate'; 
+  const userRole = 'student'; 
 
   return (
     <aside className="sidebar">
