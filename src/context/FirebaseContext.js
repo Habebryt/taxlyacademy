@@ -1,17 +1,24 @@
+// src/context/FirebaseContext.js
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, signInAnonymously, signInWithCustomToken } from "firebase/auth";
+import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 
+// Create the context
 const FirebaseContext = createContext(null);
 
+// Create a custom hook for easy access to the context
 export const useFirebase = () => useContext(FirebaseContext);
 
+// The Provider component that will wrap your entire application
 export const FirebaseProvider = ({ children }) => {
   const [authStatus, setAuthStatus] = useState('pending');
   const [db, setDb] = useState(null);
   const [auth, setAuth] = useState(null);
   const [appId, setAppId] = useState(null);
+  // --- NEW: State to hold the current user object ---
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const initializeAndAuth = async () => {
@@ -27,35 +34,37 @@ export const FirebaseProvider = ({ children }) => {
           setAuth(firebaseAuth);
           setAppId(firebaseConfig.appId || 'default-app-id');
 
-          
-          // eslint-disable-next-line no-undef
-          const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+          // --- NEW: onAuthStateChanged listener ---
+          // This is the key to maintaining a live session. It runs whenever
+          // the user's login state changes (login, logout, or page refresh).
+          onAuthStateChanged(firebaseAuth, (user) => {
+            if (user) {
+              // User is signed in.
+              setCurrentUser(user);
+              setAuthStatus('success');
+              console.log("Firebase user is signed in:", user.uid);
+            } else {
+              // User is signed out.
+              setCurrentUser(null);
+              setAuthStatus('loggedOut');
+              console.log("Firebase user is signed out.");
+            }
+          });
 
-          
-          if (token && typeof token === 'string' && token.split('.').length === 3) {
-           
-            await signInWithCustomToken(firebaseAuth, token);
-          } else {
-            
-            await signInAnonymously(firebaseAuth);
-          }
-        
-          
-          setAuthStatus('success');
         } else {
           throw new Error("Firebase config is missing.");
         }
       } catch (error) {
-       
+        console.error("Firebase initialization failed:", error);
         setAuthStatus('failed');
       }
     };
 
     initializeAndAuth();
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once
 
-  
-  const value = { db, auth, appId, authStatus };
+  // The value provided to all children components, now including the user
+  const value = { db, auth, appId, authStatus, currentUser };
 
   return (
     <FirebaseContext.Provider value={value}>

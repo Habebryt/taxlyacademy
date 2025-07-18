@@ -6,8 +6,8 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import "../styles/CourseDetail.css";
 import Hero from "../components/Hero";
 import { useFirebase } from "../context/FirebaseContext";
-import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
-import { CheckCircleFill, XCircleFill, BoxArrowInRight, Easel } from "react-bootstrap-icons";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { CheckCircleFill, XCircleFill } from "react-bootstrap-icons";
 
 // --- Reusable Modals (can be moved to a separate components file later) ---
 const StatusModal = ({ status, title, message, onClose }) => (
@@ -46,11 +46,7 @@ const FreeEnrollmentModal = ({
   onSubmit,
   isSubmitting,
 }) => {
-  const { auth } = useFirebase();
-  const [formData, setFormData] = useState({ 
-    fullName: auth.currentUser?.displayName || "", 
-    email: auth.currentUser?.email || "" 
-  });
+  const [formData, setFormData] = useState({ fullName: "", email: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -81,7 +77,8 @@ const FreeEnrollmentModal = ({
           </div>
           <div className="modal-body">
             <p>
-              Please confirm your details below to get free access to all course materials.
+              You're about to get free access to all course materials. Please
+              confirm your details below.
             </p>
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
@@ -147,59 +144,37 @@ const CourseDetail = () => {
   
   const course = useMemo(() => courses.find((c) => c.id === id), [id, courses]);
   
-  const { db, auth, appId, authStatus, currentUser } = useFirebase();
+  const { db, auth, appId, authStatus } = useFirebase();
   const { symbol, rate } = useContext(CurrencyContext);
   const navigate = useNavigate();
   
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-  // --- NEW: State to hold the user's role ---
-  const [userRole, setUserRole] = useState(null);
-
-  // --- NEW: This effect fetches the user's role from Firestore when they log in ---
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      if (currentUser && db) {
-        const userDocRef = doc(db, "users", currentUser.uid);
-        const docSnap = await getDoc(userDocRef);
-        if (docSnap.exists()) {
-          setUserRole(docSnap.data().role);
-        }
-      }
-    };
-    fetchUserRole();
-  }, [currentUser, db]);
-
-  const isLoggedIn = authStatus === 'success' && currentUser != null;
-  // --- NEW: Check if the logged-in user is a trainer AND the owner of this course ---
-  const isTrainerAndOwner = userRole === 'trainer' && currentUser?.uid === course?.trainerId;
 
   const handlePaidEnroll = () => {
-    if (isLoggedIn) {
-        navigate(`/checkout?course=${id}`);
-    } else {
-        navigate('/login');
-    }
+    navigate(`/checkout?course=${id}`);
   };
 
   const handleFreeEnrollClick = () => {
-    if (isLoggedIn) {
-        setIsEnrollModalOpen(true);
-    } else {
-        navigate('/login');
-    }
+    setIsEnrollModalOpen(true);
   };
 
   const handleFreeEnrollSubmit = async (formData) => {
     if (authStatus !== "success" || !db || !auth.currentUser) {
-      setModalContent({ status: "error", title: "Enrollment Failed", message: "Could not connect to the database. Please refresh the page and try again." });
+      setModalContent({
+        status: "error",
+        title: "Enrollment Failed",
+        message:
+          "Could not connect to the database. Please refresh the page and try again.",
+      });
       return;
     }
     setIsSubmitting(true);
     try {
       const userId = auth.currentUser.uid;
       const enrollmentsCollectionRef = collection(db, `artifacts/${appId}/public/data/freeEnrollments`);
+
       await addDoc(enrollmentsCollectionRef, {
         userId,
         courseId: course.id,
@@ -208,11 +183,21 @@ const CourseDetail = () => {
         email: formData.email,
         enrolledAt: serverTimestamp(),
       });
+
       setIsEnrollModalOpen(false);
-      setModalContent({ status: "success", title: "Enrollment Successful!", message: `You're in! Check your email for access details to the ${course.title} course.` });
+      setModalContent({
+        status: "success",
+        title: "Enrollment Successful!",
+        message: `You're in! Check your email for access details to the ${course.title} course.`,
+      });
     } catch (error) {
       console.error("Error writing document to Firestore: ", error);
-      setModalContent({ status: "error", title: "Enrollment Failed", message: "There was an error submitting your enrollment. Please try again." });
+      setModalContent({
+        status: "error",
+        title: "Enrollment Failed",
+        message:
+          "There was an error submitting your enrollment. Please try again.",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -222,13 +207,29 @@ const CourseDetail = () => {
     setModalContent(null);
   };
 
-  if (loading) { /* ... loading UI ... */ }
-  if (!course) { /* ... course not found UI ... */ }
+  if (loading) {
+    return <div className="container py-5 text-center">Loading course details...</div>;
+  }
 
-  const certificateFee = ((course.price / 10) * rate).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  if (!course) {
+    return (
+      <div className="container py-5 text-center">
+        <h2>Course Not Found</h2>
+        <p>The course you are looking for may have been moved or does not exist.</p>
+        <Link to="/courses" className="btn btn-outline-primary mt-3">
+          Go Back to Courses
+        </Link>
+      </div>
+    );
+  }
+
+  const certificateFee = ((course.price / 10) * rate).toLocaleString(
+    undefined,
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }
+  );
 
   return (
     <>
@@ -236,63 +237,121 @@ const CourseDetail = () => {
         <title>{course.title} | Taxly Academy</title>
         <meta name="description" content={course.overview} />
       </Helmet>
+
       <Hero
         backgroundImage="/images/single-course-banner.jpg"
         title={course.title}
         subtitle="Master in-demand skills with our expert-led, hands-on training."
       />
+
       <section className="course-detail-section py-5">
         <div className="container">
           <div className="row">
+            {/* Main Content Column */}
             <div className="col-lg-8">
-              {/* ... Course content JSX ... */}
+              <div className="course-content">
+                <h2 className="mb-3">Course Overview</h2>
+                <p className="lead">{course.overview}</p>
+                <h3 className="mt-5">What You'll Learn</h3>
+                <ul className="list-unstyled outcome-list">
+                  {course.learningOutcomes.map((outcome, idx) => (
+                    <li key={idx}>
+                      <i className="bi bi-check-circle-fill text-success me-2"></i>
+                      {outcome}
+                    </li>
+                  ))}
+                </ul>
+                <h3 className="mt-5">Who Is This Course For?</h3>
+                <p>{course.whoIsThisFor}</p>
+                <h3 className="mt-5">Career Opportunities</h3>
+                <div className="d-flex flex-wrap">
+                  {course.careerOpportunities.map((job, idx) => (
+                    <span
+                      key={idx}
+                      className="badge bg-success text-light m-1"
+                    >
+                      {job}
+                    </span>
+                  ))}
+                </div>
+                <h3 className="mt-5">Curriculum</h3>
+                <div className="accordion" id="curriculumAccordion">
+                  {course.curriculum.map((topic, idx) => (
+                    <div className="accordion-item" key={idx}>
+                      <h2 className="accordion-header" id={`heading${idx}`}>
+                        <button
+                          className="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target={`#collapse${idx}`}
+                        >
+                          {topic}
+                        </button>
+                      </h2>
+                      <div
+                        id={`collapse${idx}`}
+                        className="accordion-collapse collapse"
+                        data-bs-parent="#curriculumAccordion"
+                      >
+                        <div className="accordion-body">
+                          Detailed lesson plans, resources, and assignments for
+                          this module will be provided upon course enrollment.
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
+
+            {/* Sidebar Column */}
             <div className="col-lg-4">
-              <div className="course-sidebar card shadow-sm p-4 sticky-top" style={{ top: "120px" }}>
+              <div
+                className="course-sidebar card shadow-sm p-4 sticky-top"
+                style={{ top: "120px" }}
+              >
                 <h4 className="mb-3">Enrollment Options</h4>
 
-                {/* --- UPDATED: Conditional rendering based on login status AND role --- */}
-                {isTrainerAndOwner ? (
-                    <div className="alert alert-info text-center">
-                        <Easel size={24} className="mb-2" />
-                        <p className="fw-bold mb-1">You are the instructor of this course.</p>
-                        <p className="small mb-0">You can manage this course from your trainer dashboard.</p>
-                    </div>
-                ) : !isLoggedIn ? (
-                    <div className="alert alert-warning text-center">
-                        <p className="fw-bold mb-2">You must be logged in to enroll.</p>
-                        <Link to="/login" className="btn btn-primary w-100">
-                            <BoxArrowInRight className="me-2" /> Login or Register
-                        </Link>
-                    </div>
-                ) : (
-                    <>
-                        {/* Free Enrollment Option */}
-                        <div className="border rounded p-3 mb-3 text-center">
-                          <h5 className="fw-bold">Standard Enrollment</h5>
-                          <p className="display-6 text-success fw-bold">Free</p>
-                          <p className="text-muted small">Full course access, community support, and hands-on projects.</p>
-                          <button
-                            className="btn btn-success btn-lg w-100"
-                            onClick={handleFreeEnrollClick}
-                          >
-                            Start Learning for Free
-                          </button>
-                        </div>
-                        {/* Paid Certificate Option */}
-                        <div className="border rounded p-3 text-center">
-                          <h5 className="fw-bold">Certificate Upgrade</h5>
-                          <p className="display-6 text-primary fw-bold">{symbol}{certificateFee}</p>
-                          <p className="text-muted small">Includes all standard features plus an official, shareable certificate.</p>
-                          <button
-                            className="btn btn-primary btn-lg w-100"
-                            onClick={handlePaidEnroll}
-                          >
-                            Enroll + Get Certificate
-                          </button>
-                        </div>
-                    </>
-                )}
+                {/* Free Enrollment Option */}
+                <div className="border rounded p-3 mb-3 text-center">
+                  <h5 className="fw-bold">Standard Enrollment</h5>
+                  <p className="display-6 text-success fw-bold">Free</p>
+                  <p className="text-muted small">
+                    Full course access, community support, and hands-on
+                    projects.
+                  </p>
+                  <button
+                    className="btn btn-success btn-lg w-100"
+                    onClick={handleFreeEnrollClick}
+                    disabled={authStatus !== "success"}
+                  >
+                    {authStatus === "pending"
+                      ? "Connecting..."
+                      : "Start Learning for Free"}
+                  </button>
+                </div>
+
+                {/* Paid Certificate Option */}
+                <div className="border rounded p-3 text-center">
+                  <h5 className="fw-bold">Certificate Upgrade</h5>
+                  <p className="display-6 text-primary fw-bold">
+                    {symbol}
+                    {certificateFee}
+                  </p>
+                  <p className="text-muted small">
+                    Includes all standard features plus an official, shareable
+                    certificate upon completion.
+                  </p>
+                  <button
+                    className="btn btn-primary btn-lg w-100"
+                    onClick={handlePaidEnroll}
+                    disabled={authStatus !== "success"}
+                  >
+                    {authStatus === "pending"
+                      ? "Connecting..."
+                      : "Enroll + Get Certificate"}
+                  </button>
+                </div>
                 <div className="mt-4">
                   <h5 className="mb-3">All Options Include</h5>
                   <ul className="list-unstyled">
@@ -306,6 +365,8 @@ const CourseDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* Conditionally render the modals */}
       {isEnrollModalOpen && (
         <>
           <FreeEnrollmentModal
@@ -317,6 +378,7 @@ const CourseDetail = () => {
           <div className="modal-backdrop fade show"></div>
         </>
       )}
+
       {modalContent && (
         <>
           <StatusModal

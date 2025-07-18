@@ -4,7 +4,9 @@ import { HelmetProvider } from "react-helmet-async";
 import { CurrencyProvider } from "./context/CurrencyContext";
 import { FirebaseProvider } from "./context/FirebaseContext";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "animate.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { CourseProvider } from "./context/CourseContext"; 
 
 // --- NEW: Import the MainLayout component ---
 import MainLayout from "./components/MainLayout";
@@ -33,7 +35,7 @@ import ForGovernment from "./pages/ForGovernment";
 import ForSchools from "./pages/ForSchools";
 
 // --- Import all Dashboard pages ---
-import DashboardComingSoon from "./pages/DashboardComingSoon";
+import Login from "./pages/Login";
 import MyCourses from './pages/dashboard/student/MyCourses';
 import CoursePlayer from './pages/dashboard/student/CoursePlayer';
 import JobApplications from './pages/dashboard/student/JobApplications';
@@ -47,6 +49,7 @@ import ClassroomManager from './pages/dashboard/trainer/ClassroomManager';
 import AssessmentManager from './pages/dashboard/trainer/AssessmentManager';
 import SupportDashboard from './pages/dashboard/support/SupportDashboard';
 import CorporateDashboard from './pages/dashboard/corporate/CorporateDashboard';
+import StudentDetailView from "./pages/dashboard/trainer/StudentDetailView";
 
 
 const GA_MEASUREMENT_ID = "G-NGZ7CF0TNG";
@@ -71,7 +74,7 @@ function App() {
         <FirebaseProvider>
           {/* The <Router> should be in your index.js file */}
           <AnalyticsTracker />
-          
+          <CourseProvider>
           {/* The <main> tag has been removed from here as it's now inside MainLayout */}
           <Routes>
             {/* --- Public Pages Wrapped in MainLayout --- */}
@@ -96,7 +99,7 @@ function App() {
             <Route path="/for-government" element={<MainLayout><ForGovernment /></MainLayout>} />
             
             {/* --- Dashboard Routes (These do NOT use the MainLayout) --- */}
-            <Route path="/login" element={<DashboardComingSoon />} />
+            <Route path="/login" element={<Login />} />
             
             {/* Student Dashboard */}
             <Route path="/dashboard/my-courses" element={<MyCourses />} />
@@ -112,11 +115,13 @@ function App() {
             <Route path="/dashboard/edit-course/:courseId" element={<EditCourse />} />
             <Route path="/dashboard/classroom-manager/:courseId" element={<ClassroomManager />} />
             <Route path="/dashboard/assessment-manager/:courseId" element={<AssessmentManager />} />
+            <Route path="/dashboard/student-details/:courseId/:userId" element={<StudentDetailView />} />
             
             {/* Support & Corporate Dashboards */}
             <Route path="/dashboard/support" element={<SupportDashboard />} />
             <Route path="/dashboard/corporate" element={<CorporateDashboard />} />
           </Routes>
+          </CourseProvider>
         </FirebaseProvider>
       </CurrencyProvider>
     </HelmetProvider>

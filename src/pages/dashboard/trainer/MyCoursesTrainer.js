@@ -12,7 +12,7 @@ import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { Book, HourglassSplit, PlusCircle, PencilSquare, People } from 'react-bootstrap-icons';
 
 const MyCoursesTrainer = () => {
-    const { db, auth } = useFirebase();
+    const { db, auth, appId } = useFirebase(); // Get appId from context
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -25,16 +25,18 @@ const MyCoursesTrainer = () => {
                 setTimeout(fetchTrainerCourses, 100);
                 return;
             }
-
+            
             setLoading(true);
             try {
                 const trainerId = auth.currentUser.uid;
-                // Query the 'courses' collection for documents created by the current trainer
-                const coursesRef = collection(db, "courses");
+                // --- FIX: Use the correct, structured path to fetch courses ---
+                const coursesRef = collection(db, `courses`);
+                
                 const q = query(coursesRef, where("trainerId", "==", trainerId), orderBy("createdAt", "desc"));
 
                 const querySnapshot = await getDocs(q);
-                const trainerCourses = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // The document ID is needed for the edit link, so we save it.
+                const trainerCourses = querySnapshot.docs.map(doc => ({ firestoreId: doc.id, ...doc.data() }));
                 setCourses(trainerCourses);
 
             } catch (error) {
@@ -45,7 +47,7 @@ const MyCoursesTrainer = () => {
         };
 
         fetchTrainerCourses();
-    }, [auth, db]);
+    }, [auth, db, appId]);
 
     return (
         <DashboardLayout>
@@ -82,7 +84,7 @@ const MyCoursesTrainer = () => {
                                     </thead>
                                     <tbody>
                                         {courses.map(course => (
-                                            <tr key={course.id}>
+                                            <tr key={course.firestoreId}>
                                                 <td className="fw-bold">{course.title}</td>
                                                 <td>₦{course.price.toLocaleString()}</td>
                                                 <td>{course.duration}</td>
@@ -90,10 +92,11 @@ const MyCoursesTrainer = () => {
                                                     {course.createdAt ? new Date(course.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}
                                                 </td>
                                                 <td>
-                                                    <Link to={`/dashboard/edit-course/${course.id}`} className="btn btn-sm btn-outline-secondary me-2" title="Edit Course Details">
+                                                    {/* --- FIX: Use the Firestore document ID for the edit link --- */}
+                                                    <Link to={`/dashboard/edit-course/${course.firestoreId}`} className="btn btn-sm btn-outline-secondary me-2" title="Edit Course Details">
                                                         <PencilSquare />
                                                     </Link>
-                                                    {/* --- FIX: This link now points to the correct classroom manager route --- */}
+                                                    {/* --- FIX: Use the course's URL-friendly ID for the classroom link --- */}
                                                     <Link to={`/dashboard/classroom-manager/${course.id}`} className="btn btn-sm btn-outline-info" title="View Students & Submissions">
                                                         <People />
                                                     </Link>

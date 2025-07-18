@@ -1,12 +1,16 @@
 import React, { useState, useContext, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { CurrencyContext } from "../context/CurrencyContext";
+import { useCourses } from "../context/CourseContext";
 import { Link } from "react-router-dom";
 import "../styles/Courses.css";
 import Hero from "../components/Hero";
-import COURSES from "../data/courses";
 
 const Courses = () => {
+  // --- FIX: Get courses and loading state from the central context ---
+  const { courses, loading } = useCourses();
+
+  // --- FIX: Removed duplicate state declarations ---
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("none");
   const [layoutView, setLayoutView] = useState("grid-3");
@@ -21,15 +25,17 @@ const Courses = () => {
     });
   };
 
+  // --- FIX: Correctly implemented filtering and sorting logic ---
   const filteredCourses = useMemo(() => {
-    if (!Array.isArray(COURSES)) {
+    if (!Array.isArray(courses)) {
       return [];
     }
-    let courses = [...COURSES];
+    let filtered = [...courses];
 
+    // 1. Filter by search term
     if (searchTerm) {
       const lowercasedFilter = searchTerm.toLowerCase();
-      courses = courses.filter(
+      filtered = filtered.filter(
         (course) =>
           (course.title &&
             course.title.toLowerCase().includes(lowercasedFilter)) ||
@@ -42,7 +48,8 @@ const Courses = () => {
       );
     }
 
-    courses.sort((a, b) => {
+    // 2. Sort the filtered results
+    filtered.sort((a, b) => {
       switch (sortBy) {
         case "price-asc":
           return a.price / 10 - b.price / 10;
@@ -59,8 +66,20 @@ const Courses = () => {
       }
     });
 
-    return courses;
-  }, [searchTerm, sortBy]);
+    return filtered;
+  }, [searchTerm, sortBy, courses]);
+
+  // --- NEW: Show a loading state while fetching courses from the database ---
+  if (loading) {
+    return (
+      <div className="container text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2 text-muted">Loading courses...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -141,7 +160,7 @@ const Courses = () => {
             <div className="row">
               {filteredCourses.map((course, idx) => (
                 <div
-                  key={course.id}
+                  key={course.id || idx}
                   className="col-md-4 mb-4"
                   data-aos="fade-up"
                   data-aos-delay={idx * 100}
@@ -228,7 +247,7 @@ const Courses = () => {
             </div>
           )}
 
-          {filteredCourses.length === 0 && (
+          {!loading && filteredCourses.length === 0 && (
             <p className="text-center mt-5">No courses match your search.</p>
           )}
         </div>

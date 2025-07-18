@@ -1,0 +1,55 @@
+/* src/styles/Login.css */
+
+.login-page-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 4rem 1rem;
+  background-size: cover;
+  background-position: center center;
+  transition: background-image 0.5s ease-in-out;
+}
+
+/* IMPORTANT: The background-image properties are now set directly in the Login.js component
+  using inline styles. This ensures React can correctly find the images in your /public folder.
+  This CSS file provides the rest of the styling.
+*/
+
+.login-form-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.divider-text {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #adb5bd;
+}
+.divider-text::before, .divider-text::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #dee2e6;
+}
+.divider-text:not(:empty)::before {
+  margin-right: .25em;
+}
+.divider-text:not(:empty)::after {
+  margin-left: .25em;
+}
+
+/* Styles for the registration tabs */
+.nav-pills .nav-link {
+    color: #6c757d;
+    cursor: pointer;
+}
+.nav-pills .nav-link.active {
+    background-color: #0d6efd;
+    color: #fff;
+}

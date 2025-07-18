@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { 
     HouseDoor, 
     Mortarboard, 
@@ -13,11 +13,60 @@ import {
 } from 'react-bootstrap-icons';
 import '../../../../src/styles/Dashboard.css';
 
+// --- NEW: Import Firebase services ---
+import { useFirebase } from '../../../context/FirebaseContext';
+import { doc, getDoc } from "firebase/firestore";
+
 const Sidebar = () => {
-  // --- This is a placeholder for demonstration ---
-  // In a real application, you would get the user's role from your authentication context.
-  // You can change this value to 'trainer', 'support', or 'corporate' to see the menu change.
-  const userRole = 'student'; 
+  const { auth, db } = useFirebase();
+  const navigate = useNavigate();
+
+  // --- NEW: State to hold the user's role ---
+  const [userRole, setUserRole] = useState(null);
+
+  // --- NEW: This effect fetches the user's role from Firestore ---
+  useEffect(() => {
+    // --- FIX: Check if auth is initialized before using it ---
+    if (!auth) {
+      return; // Do nothing if auth is not ready yet
+    }
+
+    const fetchUserRole = async (user) => {
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+          // Set the role from the user's profile in the database
+          setUserRole(docSnap.data().role);
+        } else {
+          // If no profile exists, default to student
+          setUserRole('student');
+        }
+      }
+    };
+
+    // We use onAuthStateChanged to ensure we run this check *after*
+    // Firebase has confirmed the user is logged in.
+    const unsubscribe = auth.onAuthStateChanged(user => {
+        if (user) {
+            fetchUserRole(user);
+        } else {
+            setUserRole(null); // No user logged in
+        }
+    });
+
+    return () => unsubscribe(); // Cleanup the listener
+  }, [auth, db]); // This effect now correctly depends on `auth`
+
+  // --- NEW: Logout Functionality ---
+  const handleLogout = async () => {
+    try {
+        await auth.signOut();
+        navigate('/login'); // Redirect to login page after logout
+    } catch (error) {
+        console.error("Error signing out:", error);
+    }
+  };
 
   return (
     <aside className="sidebar">
@@ -106,9 +155,10 @@ const Sidebar = () => {
 
       </nav>
       <div className="sidebar-footer">
-        <Link to="/" className="sidebar-link logout-link">
+        {/* --- UPDATED: Use a button for the logout action --- */}
+        <button onClick={handleLogout} className="sidebar-link logout-link btn btn-link text-decoration-none">
           <BoxArrowLeft className="me-2" /> Logout
-        </Link>
+        </button>
       </div>
     </aside>
   );

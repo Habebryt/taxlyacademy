@@ -11,21 +11,21 @@ import { useFirebase } from "../../../context/FirebaseContext";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import StatusModal from "../../../components/common/StatusModal"; // Assuming this component exists
 
-import { Book, PlusCircle, CloudArrowUp } from "react-bootstrap-icons";
+import { Book, PlusCircle } from "react-bootstrap-icons";
 
+// --- NEW: Helper function to create a URL-friendly slug from the title ---
 const createCourseId = (title) => {
-    if (!title) return "";
-    return title
+  if (!title) return "";
+  return title
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")// Remove special characters
-    .replace(/\s+/g, "-")// Replace spaces with hyphens
+    .replace(/[^a-z0-9\s-]/g, "") // Remove special characters
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
     .slice(0, 50); // Truncate to 50 chars
-}
+};
 
 const CreateCourse = () => {
   const { db, auth, appId, authStatus } = useFirebase();
-  const navigate = useNavigate();
-  // State for the main course form
+  const navigate = useNavigate(); // State for the main course form
   const [courseData, setCourseData] = useState({
     title: "",
     description: "",
@@ -35,9 +35,8 @@ const CreateCourse = () => {
     keywords: "",
     whoIsThisFor: "",
     careerOpportunities: "",
-  });
+  }); // State for dynamic curriculum and learning outcomes
 
-  // State for dynamic curriculum and learning outcomes
   const [curriculum, setCurriculum] = useState([""]);
   const [learningOutcomes, setLearningOutcomes] = useState([""]);
 
@@ -51,9 +50,8 @@ const CreateCourse = () => {
   const handleCourseChange = (e) => {
     const { name, value } = e.target;
     setCourseData((prev) => ({ ...prev, [name]: value }));
-  };
+  }; // --- Handlers for dynamic fields ---
 
-  // --- Handlers for dynamic fields ---
   const handleDynamicChange = (index, value, field) => {
     if (field === "curriculum") {
       const newCurriculum = [...curriculum];
@@ -97,10 +95,15 @@ const CreateCourse = () => {
 
     try {
       const trainerId = auth.currentUser.uid;
-      const coursesCollectionRef = collection(db, "courses"); // Saving to a top-level 'courses' collection
+      // --- FIX: Use the correct, structured path for the collection ---
+      const coursesCollectionRef = collection(
+        db,
+        `artifacts/${appId}/public/data/courses`
+      );
 
       const dataToSubmit = {
-         id: createCourseId(courseData.title),
+        // --- NEW: Add the URL-friendly ID ---
+        id: createCourseId(courseData.title),
         ...courseData,
         price: Number(courseData.price), // Ensure price is a number
         keywords: courseData.keywords.split(",").map((k) => k.trim()),
@@ -118,9 +121,8 @@ const CreateCourse = () => {
       setModalContent({
         status: "success",
         title: "Course Created!",
-        message: "Your new course has been successfully saved to the database.",
+        message: "Your new course has been successfully saved.",
       });
-      // Reset form (optional)
     } catch (error) {
       console.error("Error creating course:", error);
       setModalContent({
@@ -132,31 +134,38 @@ const CreateCourse = () => {
       setIsSubmitting(false);
     }
   };
-
   const handleCloseModal = () => {
     setModalContent(null);
-    if (modalContent?.status === "success"){
-        navigate("/dashboard/my-courses-trainer");
+    // --- NEW: Redirect on success ---
+    if (modalContent?.status === "success") {
+      navigate("/dashboard/my-courses-trainer");
     }
   };
 
   return (
     <DashboardLayout>
+                 {" "}
       <Helmet>
-        <title>Create New Course | Trainer Dashboard</title>
+                        <title>Create New Course | Trainer Dashboard</title>   
+               {" "}
       </Helmet>
+                 {" "}
       <div className="dashboard-page-content">
-        <h3 className="fw-bold mb-4">Create a New Course</h3>
+                        <h3 className="fw-bold mb-4">Create a New Course</h3>   
+                   {" "}
         <form
           onSubmit={handleSubmit}
           className="p-4 bg-white rounded shadow-sm"
         >
-          {/* Basic Course Info */}
+                              {/* Basic Course Info */}                   {" "}
           <div className="row">
+                                   {" "}
             <div className="col-md-8 mb-3">
+                                         {" "}
               <label htmlFor="title" className="form-label">
                 Course Title
               </label>
+                                         {" "}
               <input
                 type="text"
                 id="title"
@@ -166,11 +175,15 @@ const CreateCourse = () => {
                 onChange={handleCourseChange}
                 required
               />
+                                     {" "}
             </div>
+                                   {" "}
             <div className="col-md-4 mb-3">
+                                         {" "}
               <label htmlFor="duration" className="form-label">
                 Duration (e.g., 6 Weeks)
               </label>
+                                         {" "}
               <input
                 type="text"
                 id="duration"
@@ -180,12 +193,17 @@ const CreateCourse = () => {
                 onChange={handleCourseChange}
                 required
               />
+                                     {" "}
             </div>
+                               {" "}
           </div>
+                             {" "}
           <div className="mb-3">
+                                   {" "}
             <label htmlFor="description" className="form-label">
               Short Description (for course cards)
             </label>
+                                   {" "}
             <textarea
               id="description"
               name="description"
@@ -195,11 +213,15 @@ const CreateCourse = () => {
               rows="2"
               required
             ></textarea>
+                               {" "}
           </div>
+                             {" "}
           <div className="mb-3">
+                                   {" "}
             <label htmlFor="overview" className="form-label">
               Full Overview (for details page)
             </label>
+                                   {" "}
             <textarea
               id="overview"
               name="overview"
@@ -209,11 +231,15 @@ const CreateCourse = () => {
               rows="4"
               required
             ></textarea>
+                               {" "}
           </div>
+                             {" "}
           <div className="mb-3">
+                                   {" "}
             <label htmlFor="price" className="form-label">
               Base Price (NGN) - Certificate fee will be 10% of this
             </label>
+                                   {" "}
             <input
               type="number"
               id="price"
@@ -223,14 +249,15 @@ const CreateCourse = () => {
               onChange={handleCourseChange}
               required
             />
+                               {" "}
           </div>
-
-          <hr className="my-4" />
-
-          {/* Learning Outcomes */}
-          <h5 className="fw-bold">What Students Will Learn</h5>
+                              <hr className="my-4" />                   {" "}
+          {/* Learning Outcomes */}                   {" "}
+          <h5 className="fw-bold">What Students Will Learn</h5>                 
+           {" "}
           {learningOutcomes.map((outcome, index) => (
             <div key={index} className="input-group mb-2">
+                                         {" "}
               <input
                 type="text"
                 className="form-control"
@@ -240,6 +267,7 @@ const CreateCourse = () => {
                 }
                 placeholder={`Learning Outcome #${index + 1}`}
               />
+                                         {" "}
               {learningOutcomes.length > 1 && (
                 <button
                   type="button"
@@ -249,8 +277,10 @@ const CreateCourse = () => {
                   &times;
                 </button>
               )}
+                                     {" "}
             </div>
           ))}
+                             {" "}
           <button
             type="button"
             className="btn btn-sm btn-outline-secondary"
@@ -259,13 +289,12 @@ const CreateCourse = () => {
             <PlusCircle className="me-1" />
             Add Outcome
           </button>
-
-          <hr className="my-4" />
-
-          {/* Curriculum */}
-          <h5 className="fw-bold">Course Curriculum</h5>
+                              <hr className="my-4" />                   {" "}
+          {/* Curriculum */}                   {" "}
+          <h5 className="fw-bold">Course Curriculum</h5>                   {" "}
           {curriculum.map((week, index) => (
             <div key={index} className="input-group mb-2">
+                                         {" "}
               <input
                 type="text"
                 className="form-control"
@@ -275,6 +304,7 @@ const CreateCourse = () => {
                 }
                 placeholder={`Week ${index + 1}: Topic Title`}
               />
+                                         {" "}
               {curriculum.length > 1 && (
                 <button
                   type="button"
@@ -284,8 +314,10 @@ const CreateCourse = () => {
                   &times;
                 </button>
               )}
+                                     {" "}
             </div>
           ))}
+                             {" "}
           <button
             type="button"
             className="btn btn-sm btn-outline-secondary"
@@ -294,15 +326,15 @@ const CreateCourse = () => {
             <PlusCircle className="me-1" />
             Add Week/Module
           </button>
-
-          <hr className="my-4" />
-
-          {/* Meta Information */}
-          <h5 className="fw-bold">Meta Information</h5>
+                              <hr className="my-4" />                   {" "}
+          {/* Meta Information */}                   {" "}
+          <h5 className="fw-bold">Meta Information</h5>                     
           <div className="mb-3">
+                                   {" "}
             <label htmlFor="whoIsThisFor" className="form-label">
               Who is this course for?
             </label>
+                                   {" "}
             <textarea
               id="whoIsThisFor"
               name="whoIsThisFor"
@@ -312,11 +344,15 @@ const CreateCourse = () => {
               rows="2"
               required
             ></textarea>
+                               {" "}
           </div>
+                             {" "}
           <div className="mb-3">
+                                   {" "}
             <label htmlFor="careerOpportunities" className="form-label">
               Career Opportunities (comma-separated)
             </label>
+                                   {" "}
             <input
               type="text"
               id="careerOpportunities"
@@ -327,11 +363,15 @@ const CreateCourse = () => {
               placeholder="e.g., Social Media Manager, Content Strategist"
               required
             />
+                               {" "}
           </div>
+                             {" "}
           <div className="mb-3">
+                                   {" "}
             <label htmlFor="keywords" className="form-label">
               Keywords for AI Matching (comma-separated)
             </label>
+                                   {" "}
             <input
               type="text"
               id="keywords"
@@ -342,28 +382,37 @@ const CreateCourse = () => {
               placeholder="e.g., social media, marketing, content"
               required
             />
+                               {" "}
           </div>
-
+                             {" "}
           <button
             type="submit"
             className="btn btn-primary btn-lg w-100 mt-4"
             disabled={isSubmitting || authStatus !== "success"}
           >
-            {isSubmitting ? "Saving Course..." : "Create Course"}
+                                   {" "}
+            {isSubmitting ? "Saving Course..." : "Create Course"}               
+               {" "}
           </button>
+                         {" "}
         </form>
+                   {" "}
       </div>
+                 {" "}
       {modalContent && (
         <>
+                             {" "}
           <StatusModal
             status={modalContent.status}
             title={modalContent.title}
             message={modalContent.message}
             onClose={handleCloseModal}
           />
-          <div className="modal-backdrop fade show"></div>
+                              <div className="modal-backdrop fade show"></div> 
+                       {" "}
         </>
       )}
+             {" "}
     </DashboardLayout>
   );
 };

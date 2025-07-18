@@ -20,11 +20,12 @@ const EnrolledCourseCard = ({ course }) => (
             <img src={`/images/course-placeholder.jpg`} className="card-img-top" alt={course.courseTitle} />
             <div className="card-body d-flex flex-column">
                 <h5 className="card-title fw-bold">{course.courseTitle}</h5>
-                <p className={`badge ${course.enrollmentType === 'certificate' ? 'bg-success' : 'bg-info'}`}>
-                    {course.enrollmentType === 'certificate' ? 'Certificate Track' : 'Free Enrollment'}
+                <p className={`badge ${course.enrollmentType === 'Certificate' ? 'bg-success' : 'bg-info'}`}>
+                    {course.enrollmentType === 'Certificate' ? 'Certificate Track' : 'Free Enrollment'}
                 </p>
                 <p className="card-text small text-muted">Enrolled on: {new Date(course.enrolledAt.seconds * 1000).toLocaleDateString()}</p>
-                <Link to={`/courses/${course.courseId}/learn`} className="btn btn-primary mt-auto">
+                {/* --- FIX: Link to the course player using the Firestore ID --- */}
+                <Link to={`/courses/${course.firestoreId}/learn`} className="btn btn-primary mt-auto">
                     Start Learning <ArrowRight className="ms-1" />
                 </Link>
             </div>
@@ -34,7 +35,8 @@ const EnrolledCourseCard = ({ course }) => (
 
 
 const MyCourses = () => {
-    const { db, auth } = useFirebase();
+    // --- FIX: Get authStatus to manage loading state correctly ---
+    const { db, auth, authStatus } = useFirebase();
     const [enrolledCourses, setEnrolledCourses] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -42,9 +44,14 @@ const MyCourses = () => {
         AOS.init({ duration: 800, once: true });
 
         const fetchEnrolledCourses = async () => {
-            if (!auth.currentUser) {
-                // Wait for authentication to complete
-                setTimeout(fetchEnrolledCourses, 100);
+            // --- FIX: Only proceed if authentication is successful ---
+            if (authStatus !== 'success' || !auth.currentUser) {
+                // If auth is still pending, we wait. If it fails, we stop.
+                if(authStatus === 'pending') {
+                    setTimeout(fetchEnrolledCourses, 200); // Check again shortly
+                } else {
+                    setLoading(false); // Stop loading if auth fails or user is logged out
+                }
                 return;
             }
             
@@ -62,15 +69,25 @@ const MyCourses = () => {
                     getDocs(certQuery)
                 ]);
 
-                const freeCourses = freeSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), enrollmentType: 'free' }));
-                const certCourses = certSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), enrollmentType: 'certificate' }));
+                const freeCourses = freeSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), enrollmentType: 'Free' }));
+                const certCourses = certSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), enrollmentType: 'Certificate' }));
 
-                // Combine and de-duplicate the courses, giving preference to certificate enrollments
+                // Combine and de-duplicate the courses
                 const allCoursesMap = new Map();
                 freeCourses.forEach(course => allCoursesMap.set(course.courseId, course));
-                certCourses.forEach(course => allCoursesMap.set(course.courseId, course)); // This will overwrite free with paid if both exist
+                certCourses.forEach(course => allCoursesMap.set(course.courseId, course));
 
-                setEnrolledCourses(Array.from(allCoursesMap.values()));
+                // --- NEW: Fetch the firestoreId for each enrolled course ---
+                const coursesWithFirestoreId = await Promise.all(
+                    Array.from(allCoursesMap.values()).map(async (enrollment) => {
+                        const courseQuery = query(collection(db, "courses"), where("id", "==", enrollment.courseId));
+                        const courseSnapshot = await getDocs(courseQuery);
+                        const firestoreId = !courseSnapshot.empty ? courseSnapshot.docs[0].id : null;
+                        return { ...enrollment, firestoreId };
+                    })
+                );
+
+                setEnrolledCourses(coursesWithFirestoreId);
 
             } catch (error) {
                 console.error("Error fetching enrolled courses:", error);
@@ -80,7 +97,7 @@ const MyCourses = () => {
         };
 
         fetchEnrolledCourses();
-    }, [auth, db]);
+    }, [authStatus, auth, db]); // Depend on authStatus
 
     return (
         <DashboardLayout>
